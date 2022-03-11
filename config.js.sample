@@ -1,0 +1,33 @@
+// All the keys with values from procces.env must be configured in Azure App service: Configuration/Aplication settings
+module.exports = {
+ client_server: process.env.CLIENT_SERVER, // If you are developing, add a second parameter with "||" and the url for localhost, in prod the first
+ port: process.env.PORT,
+ dbaccounts: process.env.MONGODBACCOUNTS, // If you are developing, add a second parameter with "||" and mongodb data, in prod the first
+ dbdata: process.env.MONGODBDATA, // If you are developing, add a second parameter with "||" and mongodb data, in prod the first
+ SECRET_TOKEN: undefined, // jwt secret token
+ TRANSPORTER_OPTIONS : { // configure the secret keys fot the transporter options, we use nodemailer as transporter
+   host: undefined,
+   port: undefined,
+   secureConnection: undefined,
+    tls: { ciphers: undefined },
+    auth: {
+        user: undefined,
+        pass: undefined
+    }
+ },
+ SECRET_KEY_CRYPTO: undefined, // secret key for crypto library
+ blobAccessToken:{ // Blob access information: {sasToken:<token>,blobAccountUrl: 'https://<blob_name>.blob.core.windows.net/'}
+    sasToken: undefined,
+    blobAccountUrl: undefined,
+  },
+  f29ncr: undefined, // f29Bio sevice URL
+  ncrBearer: process.env.NCRBEARER, // If you are developing, add a second parameter with "||" and the ncr bearer, in prod the first
+  translationKey: process.env.TRANSLATION_KEY, // If you are developing, add a second parameter with "||" and the translation service key, in prod the first
+  translationCategory: process.env.TRANSLATION_CATEGORY, // If you are developing, add a second parameter with "||" and a translation category, in prod the first,
+  keyGenomics: undefined, //Azure Storage account KEY. Use access keys to authenticate your applications when making requests to this Azure storage account.
+  nameBlob: undefined, //Name of the blob
+  dx29Gateway: process.env.DX29GATEWAY, // DX29 API GATEWAY
+  dxv2api: process.env.DXV2 || 'https://app.dx29.ai',
+  dxv2apiAuth: process.env.DXV2AUTH, // token for dxv2api
+  OPENAI_API_KEY:process.env.OPENAI_API_KEY // secret token for OPENAI_API_KEY
+}
