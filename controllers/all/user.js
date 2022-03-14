@@ -903,11 +903,12 @@ function getUserName(req, res) {
 	//añado  {"_id" : false} para que no devuelva el _id
 	User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
 		if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
-		var result = "Jhon";
 		if (user) {
-			result = user.userName;
+			res.status(200).send({ userName: user.userName, lastName: user.lastName })
+		}else{
+			res.status(200).send({ userName: '', lastName: ''})
 		}
-		res.status(200).send({ userName: result })
+		
 	})
 }
 
