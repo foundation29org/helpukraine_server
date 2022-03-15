@@ -3,18 +3,9 @@
 'use strict'
 
 // add the social-info model
-const Medication = require('../../models/medication')
 const User = require('../../models/user')
 const Patient = require('../../models/patient')
 const crypt = require('../../services/crypt')
-
-const Feel = require('../../models/feel')
-const Phenotype = require('../../models/phenotype')
-const PhenotypeHistory = require('../../models/phenotype-history')
-const Seizures = require('../../models/seizures')
-const Weight = require('../../models/weight')
-const Height = require('../../models/height')
-const Prom = require('../../models/prom')
 
 const f29azureService = require("../../services/f29azure")
 
