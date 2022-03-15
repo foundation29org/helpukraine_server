@@ -89,6 +89,7 @@ function getUsers (req, res){
 								var status = '';
 								var notes = '';
 								var needs = '';
+								var drugs = [];
 								var country = '';
 								var idencrypt = '';
 								var idUserDecrypt = user._id.toString();
@@ -109,12 +110,13 @@ function getUsers (req, res){
 										status = temppatients[j].status
 										notes = temppatients[j].notes
 										needs = temppatients[j].needs
+										drugs = temppatients[j].drugs
 										var idPatientrDecrypt = temppatients[j]._id.toString();
 										var idencrypt= crypt.encrypt(idPatientrDecrypt);
 										enc = true;
 									}
 								}
-								listPatients.push({userId: userId, userName: user.userName, email: user.email, phone: user.phone, countryselectedPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, patientId:idencrypt, patientName: patientName, surname: surname, gender: gender, birthDate: birthDate, street: street, postalCode: postalCode, city: city, province: province, country: country, lat: lat, lng: lng, status: status, notes: notes, needs: needs, subgroup: user.subgroup});
+								listPatients.push({userId: userId, userName: user.userName, email: user.email, phone: user.phone, countryselectedPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, patientId:idencrypt, patientName: patientName, surname: surname, gender: gender, birthDate: birthDate, street: street, postalCode: postalCode, city: city, province: province, country: country, lat: lat, lng: lng, status: status, notes: notes, needs: needs, drugs: drugs, subgroup: user.subgroup});
 								patientsAddded++;
 						}else{
 							listPatients.push({});

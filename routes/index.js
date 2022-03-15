@@ -106,6 +106,7 @@ api.get('/patient/consentgroup/:patientId', auth(roles.All), patientCtrl.getCons
 api.put('/patient/checks/:patientId', auth(roles.All), patientCtrl.setChecks)
 api.get('/patient/checks/:patientId', auth(roles.All), patientCtrl.getChecks)
 api.put('/patient/birthdate/:patientId', auth(roles.All), patientCtrl.setBirthDate)
+api.put('/patient/drugs/:patientId', auth(roles.All), patientCtrl.saveDrugs)
 
 // phenotypeinfo routes, using the controller socialinfo, this controller has methods
 api.get('/phenotypes/:patientId', auth(roles.All), phenotypeCtrl.getPhenotype)
