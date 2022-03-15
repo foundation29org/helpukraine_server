@@ -943,54 +943,6 @@ function getPatientEmail(req, res) {
 	})
 }
 
-function getGpt3Permision(req, res) {
-	let userId = crypt.decrypt(req.params.userId);
-	//añado  {"_id" : false} para que no devuelva el _id
-	User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
-		if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
-		var result = "Jhon";
-		if (user) {
-			result = user.gptPermission;
-		}
-		res.status(200).send({ gptPermission: result })
-	})
-}
-
-function setGpt3Permision(req, res) {
-
-	let userId = crypt.decrypt(req.params.userId);
-	var gptPermission = req.body.gptPermission;
-	User.findByIdAndUpdate(userId, { gptPermission: gptPermission }, { new: true }, (err, userUpdated) => {
-		if (userUpdated) {
-			res.status(200).send({ message: 'Updated' })
-		} else {
-			console.log(err);
-			res.status(200).send({ message: 'error' })
-		}
-	})
-}
-
-function setNumCallsGpt3(req, res) {
-
-	let userId = crypt.decrypt(req.params.userId);
-
-	User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
-		if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
-		var numCallsGtp3 = user.numCallsGtp3;
-		numCallsGtp3++;
-		User.findByIdAndUpdate(userId, { numCallsGtp3: numCallsGtp3 }, { new: true }, (err, userUpdated) => {
-			if (userUpdated) {
-				res.status(200).send({ message: 'Updated' })
-			} else {
-				console.log(err);
-				res.status(200).send({ message: 'error' })
-			}
-		})
-	})
-
-}
-
-
 function isVerified(req, res) {
 	let userId = crypt.decrypt(req.params.userId);
 	//añado  {"_id" : false} para que no devuelva el _id
@@ -1019,8 +971,5 @@ module.exports = {
 	getUserName,
 	getUserEmail,
 	getPatientEmail,
-	getGpt3Permision,
-	setGpt3Permision,
-	setNumCallsGpt3,
 	isVerified
 }

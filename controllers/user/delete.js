@@ -34,14 +34,6 @@ function deleteAccount (req, res){
 					var patientId = u._id.toString();
 					var patientIdCrypt=crypt.encrypt(u._id.toString());
 					var containerName=patientIdCrypt.substr(1).toString();
-					deleteMedication(patientId);
-					deleteSeizures(patientId);
-					deleteWeight(patientId);
-					deleteHeight(patientId);
-					deleteFeel(patientId);
-					deletePhenotype(patientId);
-					deletePhenotypeHistory(patientId);
-					deleteProms(patientId);
 					deletePatient(res, patientId, containerName, userId);
 				});
 				//deleteUser(res, userId);
@@ -50,108 +42,8 @@ function deleteAccount (req, res){
 			res.status(200).send({message: `fail`})
 		}
 	})
-	
-
-	/*User.findById(userId, (err, user) => {
-	})*/
 }
 
-function deleteMedication (patientId){
-	Medication.find({ 'createdBy': patientId }, (err, medications) => {
-		if (err) console.log({message: `Error deleting the medications: ${err}`})
-		medications.forEach(function(medication) {
-			medication.remove(err => {
-				if(err) console.log({message: `Error deleting the medications: ${err}`})
-			})
-		});
-		console.log('delete medications');
-	})
-}
-
-function deleteSeizures (patientId){
-	Seizures.find({ 'createdBy': patientId }, (err, seizures) => {
-		if (err) console.log({message: `Error deleting the seizures: ${err}`})
-		seizures.forEach(function(seizure) {
-			seizure.remove(err => {
-				if(err) console.log({message: `Error deleting the seizures: ${err}`})
-			})
-		});
-		console.log('delete seizures');
-	})
-}
-
-function deleteWeight (patientId){
-	Weight.find({ 'createdBy': patientId }, (err, weights) => {
-		if (err) console.log({message: `Error deleting the weights: ${err}`})
-		weights.forEach(function(weight) {
-			weight.remove(err => {
-				if(err) console.log({message: `Error deleting the weights: ${err}`})
-			})
-		});
-		console.log('delete weights');
-	})
-}
-
-function deleteHeight (patientId){
-	Height.find({ 'createdBy': patientId }, (err, heights) => {
-		if (err) console.log({message: `Error deleting the heights: ${err}`})
-		heights.forEach(function(height) {
-			height.remove(err => {
-				if(err) console.log({message: `Error deleting the heights: ${err}`})
-			})
-		});
-		console.log('delete heights');
-	})
-}
-
-function deleteFeel (patientId){
-	Feel.find({ 'createdBy': patientId }, (err, feels) => {
-		if (err) console.log({message: `Error deleting the feels: ${err}`})
-		feels.forEach(function(feel) {
-			feel.remove(err => {
-				if(err) console.log({message: `Error deleting the feels: ${err}`})
-			})
-		});
-		console.log('delete feels');
-	})
-}
-
-function deletePhenotype (patientId){
-	Phenotype.find({ 'createdBy': patientId }, (err, phenotypes) => {
-		if (err) console.log({message: `Error deleting the phenotype: ${err}`})
-		phenotypes.forEach(function(phenotype) {
-			phenotype.remove(err => {
-				if(err) console.log({message: `Error deleting the phenotype: ${err}`})
-				
-			})
-		});
-		console.log('delete phenotype');
-	})
-}
-
-function deletePhenotypeHistory (patientId){
-	PhenotypeHistory.find({ 'createdBy': patientId }, (err, phenotypeHistories) => {
-		if (err) console.log({message: `Error deleting the phenotypeHistory: ${err}`})
-			phenotypeHistories.forEach(function(phenotypeHistory) {
-				phenotypeHistory.remove(err => {
-					if(err) console.log({message: `Error deleting the phenotypeHistory: ${err}`})
-				})
-			});
-		console.log('delete phenotypeHistory');
-	})
-}
-
-function deleteProms (patientId){
-	Prom.find({ 'createdBy': patientId }, (err, proms) => {
-		if (err) console.log({message: `Error deleting the proms: ${err}`})
-		proms.forEach(function(prom) {
-			prom.remove(err => {
-				if(err) console.log({message: `Error deleting the proms: ${err}`})
-			})
-		});
-		console.log('delete proms');
-	})
-}
 
 function deletePatient (res, patientId, containerName, userId){
 	Patient.findById(patientId, (err, patient) => {

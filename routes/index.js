@@ -77,9 +77,6 @@ api.delete('/users/:userId', auth(roles.AllLessResearcher), userCtrl.deleteUser)
 api.get('/users/name/:userId', auth(roles.All), userCtrl.getUserName)
 api.get('/users/email/:userId', auth(roles.All), userCtrl.getUserEmail)
 api.get('/patient/email/:patientId', auth(roles.All), userCtrl.getPatientEmail)
-api.get('/gpt3/:userId', auth(roles.All), userCtrl.getGpt3Permision)
-api.post('/gpt3/:userId', auth(roles.All), userCtrl.setGpt3Permision)
-api.get('/gpt3/numcalls/:userId', auth(roles.All), userCtrl.setNumCallsGpt3)
 api.get('/verified/:userId', auth(roles.All), userCtrl.isVerified)
 
 //export data

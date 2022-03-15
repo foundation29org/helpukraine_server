@@ -80,17 +80,12 @@ function getUsers (req, res){
 								var surname = '';
 								var gender = '';
 								var birthDate = '';
-								var street = '';
-								var postalCode = '';
-								var city = '';
-								var province = '';
 								var lat = '';
 								var lng = '';
 								var status = '';
 								var notes = '';
 								var needs = '';
 								var drugs = [];
-								var country = '';
 								var idencrypt = '';
 								var idUserDecrypt = user._id.toString();
 								var userId = crypt.encrypt(idUserDecrypt);
@@ -100,11 +95,6 @@ function getUsers (req, res){
 										surname = temppatients[j].surname
 										gender = temppatients[j].gender
 										birthDate = temppatients[j].birthDate
-										street = temppatients[j].street
-										postalCode = temppatients[j].postalCode
-										city = temppatients[j].city
-										province = temppatients[j].province
-										country = temppatients[j].country
 										lat = temppatients[j].lat
 										lng = temppatients[j].lng
 										status = temppatients[j].status
@@ -116,7 +106,7 @@ function getUsers (req, res){
 										enc = true;
 									}
 								}
-								listPatients.push({userId: userId, userName: user.userName, email: user.email, phone: user.phone, countryselectedPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, patientId:idencrypt, patientName: patientName, surname: surname, gender: gender, birthDate: birthDate, street: street, postalCode: postalCode, city: city, province: province, country: country, lat: lat, lng: lng, status: status, notes: notes, needs: needs, drugs: drugs, subgroup: user.subgroup});
+								listPatients.push({userId: userId, userName: user.userName, email: user.email, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, patientId:idencrypt, patientName: patientName, surname: surname, gender: gender, birthDate: birthDate, lat: lat, lng: lng, status: status, notes: notes, needs: needs, drugs: drugs, subgroup: user.subgroup});
 								patientsAddded++;
 						}else{
 							listPatients.push({});

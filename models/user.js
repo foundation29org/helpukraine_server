@@ -50,8 +50,6 @@ const UserSchema = Schema({
 	blockedaccount: { type: Boolean, default: false },
 	permissions: { type: Object, default: {} },
 	platform: { type: String, default: '' },
-	gptPermission: { type: Boolean, default: false },
-	numCallsGtp3: { type: Number, default: 0 },
 	verified: { type: Boolean, default: false },
 	countryselectedPhoneCode: { type: String, default: '' },
 	phone: { type: String, default: '' }
