@@ -1,11 +1,9 @@
 <div style="margin-bottom: 1%; padding-bottom: 2%;">
-	<img align="right" width="100px" src="/img/logo-raito.png">
+	<img align="right" width="100px" src="/img/logo-reliefukraine.png">
 </div>			
 
 Dx29 server
 ===============================================================================================================================
-
-[![Build status](https://f29.visualstudio.com/Raito/_apis/build/status/dev/Raito-server-dev)](https://f29.visualstudio.com/Raito/_build/latest?definitionId=116)   [![Deployment status](https://f29.vsrm.visualstudio.com/_apis/public/Release/badge/88bb841e-8756-480d-9840-a24ba6dd4cb4/14/15)](https://f29.visualstudio.com/Raito/_release?_a=releases&view=mine&definitionId=2)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 #### 1. Overview 

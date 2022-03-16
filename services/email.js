@@ -19,18 +19,18 @@ var options = {
 
 function sendMailVerifyEmail (email, randomstring, lang, group){
   if(lang=='es'){
-    var subjectlang='Raito - Activa la cuenta';
+    var subjectlang='Relief Ukraine - Activa la cuenta';
   }else if(lang=='pt'){
-    var subjectlang='Raito - Ative a conta';
+    var subjectlang='Relief Ukraine - Ative a conta';
   }else if(lang=='de'){
-    var subjectlang='Raito - Aktivieren Sie das Konto';
+    var subjectlang='RaiRelief Ukraineto - Aktivieren Sie das Konto';
   }else if(lang=='nl'){
-    var subjectlang='Raito - Activeer het account';
+    var subjectlang='Relief Ukraine - Activeer het account';
   }else{
-    var subjectlang='Raito - Activate the account';
+    var subjectlang='Relief Ukraine - Activate the account';
   }
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
@@ -67,18 +67,18 @@ function sendMailVerifyEmail (email, randomstring, lang, group){
 
 function sendMailRecoverPass (email, randomstring, lang){
   if(lang=='es'){
-    var subjectlang='Raito - Recuperación de la cuenta';
+    var subjectlang='Relief Ukraine - Recuperación de la cuenta';
   }else if(lang=='pt'){
-    var subjectlang='Raito - Recuperação de conta';
+    var subjectlang='Relief Ukraine - Recuperação de conta';
   }else if(lang=='de'){
-    var subjectlang='Raito - Kontowiederherstellung';
+    var subjectlang='Relief Ukraine - Kontowiederherstellung';
   }else if(lang=='nl'){
-    var subjectlang='Raito - Accountherstel';
+    var subjectlang='Relief Ukraine - Accountherstel';
   }else{
-    var subjectlang='Raito - Account Recovery';
+    var subjectlang='Relief Ukraine - Account Recovery';
   }
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user,
@@ -194,7 +194,7 @@ function sendMailRequestNewTranslation (user, lang, jsonData){
 
 function sendMailSupport (email, lang, role, supportStored, emailTo){
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
     var attachments = [];
     if(supportStored.files.length>0){
       supportStored.files.forEach(function(file) {
@@ -282,7 +282,7 @@ function sendMailMonarchIsActive (emails){
       to: TRANSPORTER_OPTIONS.auth.user,
       from: TRANSPORTER_OPTIONS.auth.user,
       bcc: emails,
-      subject: 'Raito: Monarch service active',
+      subject: 'Relief Ukraine: Monarch service active',
       template: 'monarch_is_up/_en'
     };
 
@@ -308,7 +308,7 @@ function sendMailMonarchIsInactive (){
     var mailOptions = {
       to: TRANSPORTER_OPTIONS.auth.user,
       from: TRANSPORTER_OPTIONS.auth.user,
-      subject: 'Raito: Monarch service inactive',
+      subject: 'Relief Ukraine: Monarch service inactive',
       template: 'monarch_is_down/_en',
     };
 
@@ -330,18 +330,18 @@ function sendMailMonarchIsInactive (){
 
 function sendMailInvite (email, lang, patientName){
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
 
-    var subjectlang='Raito - You have been invited to used Raito';
+    var subjectlang='Relief Ukraine - You have been invited to used Relief Ukraine';
 
     if(lang=='es'){
-      subjectlang='Raito - Has sido invitado a usar Raito';
+      subjectlang='Relief Ukraine - Has sido invitado a usar Relief Ukraine';
     }else if(lang=='nl'){
-      subjectlang='Raito - U bent uitgenodigd om Raito te gebruiken';
+      subjectlang='Relief Ukraine - U bent uitgenodigd om Relief Ukraine te gebruiken';
     }
 
     var mailOptions = {
@@ -378,7 +378,7 @@ function capitalizeFirstLetter(string) {
 
 function sendMailShare (email, patientName, lang, internalmessage, clinicalName, message, userNameOrigin, emailOrigin, isMine, role){
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
@@ -473,9 +473,9 @@ function sendMailShare (email, patientName, lang, internalmessage, clinicalName,
     if(internalmessage=='Request genetic test'){
       //Solicitud de test genetico por parte del paciente a un clínico que ya existe (caso 2)
       if(lang=='es'){
-        subjectlang='Raito - Un paciente le invita a trabajar en su caso en Raito';
+        subjectlang='Relief Ukraine - Un paciente le invita a trabajar en su caso en Relief Ukraine';
       }else if(lang=='nl'){
-        subjectlang='Raito - Een patiënt nodigt u uit om hun zaak te werken aan Raito';
+        subjectlang='Relief Ukraine - Een patiënt nodigt u uit om hun zaak te werken aan Relief Ukraine';
       }
       mailOptions = {
         to: email,
@@ -511,13 +511,13 @@ function sendMailShare (email, patientName, lang, internalmessage, clinicalName,
 
 function sendMailNewClinicialShare (email, patientName, lang, internalmessage, message, emailOrigin, mydata){
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
 
-    var subjectlang='Raito - A patient is inviting you to discover Raito';
+    var subjectlang='Relief Ukraine - A patient is inviting you to discover Relief Ukraine';
     patientName= capitalizeFirstLetter(patientName);
     if(lang=='es'){
       subjectlang=patientName+ ' necesita ayuda con su diagnóstico';
@@ -876,7 +876,7 @@ function sendMailRequestChangePermissionsClinician (email, userName, lang, patie
 
 function sendEmailInfoPermissions (patientEmail, emailorigen, email, state, lang){
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [TRANSPORTER_OPTIONS.auth.user];
 
@@ -886,19 +886,19 @@ function sendEmailInfoPermissions (patientEmail, emailorigen, email, state, lang
     if(state == 'true'){
       emailTo = email
       maillistbcc.push(emailorigen);
-      subjectlang = 'Raito - He has agreed to share'
+      subjectlang = 'Relief Ukraine - He has agreed to share'
       message = 'has agreed to share'
       if(lang=='es'){
-        subjectlang='Raito - Ha aceptado compartir';
+        subjectlang='Relief Ukraine - Ha aceptado compartir';
         message = 'ha aceptado compartir'
       }
 
     }else{
       emailTo = emailorigen
-      subjectlang = 'Raito - He has refused to share'
+      subjectlang = 'Relief Ukraine - He has refused to share'
       message = 'has refused to share'
       if(lang=='es'){
-        subjectlang='Raito - Ha rechazado compartir';
+        subjectlang='Relief Ukraine - Ha rechazado compartir';
         message = 'ha rechazado compartir'
       }
     }
@@ -937,7 +937,7 @@ function sendEmailInfoPermissions (patientEmail, emailorigen, email, state, lang
 function sendMailProgramRequestToPatient (patientEmail, clinicalEmail, lang){
   //caso 3
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [TRANSPORTER_OPTIONS.auth.user];
 
@@ -945,9 +945,9 @@ function sendMailProgramRequestToPatient (patientEmail, clinicalEmail, lang){
     var subjectlang = ''
     emailTo = patientEmail
     //maillistbcc.push(clinicalEmail);
-    subjectlang = 'Raito - Request for help to the genetic test - a new email is needed'
+    subjectlang = 'Relief Ukraine - Request for help to the genetic test - a new email is needed'
     if(lang=='es'){
-      subjectlang='Raito - Solicitud de ayuda al test genético- se necesita un nuevo correo electrónico';
+      subjectlang='Relief Ukraine - Solicitud de ayuda al test genético- se necesita un nuevo correo electrónico';
     }
 
 
@@ -983,7 +983,7 @@ function sendMailProgramRequestToPatient (patientEmail, clinicalEmail, lang){
 function sendMailProgramRequestToClinician (patientEmail, clinicalEmail, lang){
   //caso 3
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [TRANSPORTER_OPTIONS.auth.user];
 
@@ -991,9 +991,9 @@ function sendMailProgramRequestToClinician (patientEmail, clinicalEmail, lang){
     var subjectlang = ''
     emailTo = clinicalEmail
     //maillistbcc.push(patientEmail);
-    subjectlang = 'Raito - Request for help to the genetic test - a new email is needed'
+    subjectlang = 'Relief Ukraine - Request for help to the genetic test - a new email is needed'
     if(lang=='es'){
-      subjectlang='Raito - Solicitud de ayuda al test genético - se necesita un nuevo correo electrónico';
+      subjectlang='Relief Ukraine - Solicitud de ayuda al test genético - se necesita un nuevo correo electrónico';
     }
 
 
@@ -1029,22 +1029,22 @@ function sendMailProgramRequestToClinician (patientEmail, clinicalEmail, lang){
 function sendMail_request_genetic_program_patient (email, clinicalEmail, lang, patientId, instructionsNewAccount, randomIdRequest){
   //caso 1.1.2
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
 
-    var subjectlang='Raito - GTP - A clinician is inviting you to discover Raito and wants to incorporate you into a genetic testing program - '+ randomIdRequest;
+    var subjectlang='Relief Ukraine - GTP - A clinician is inviting you to discover Relief Ukraine and wants to incorporate you into a genetic testing program - '+ randomIdRequest;
 
     if(lang=='es'){
-      subjectlang='Raito - GTP - Un clínico le invita a descubrir Raito y quiere incorporarle en un programa de test genético - '+ randomIdRequest;
+      subjectlang='Relief Ukraine - GTP - Un clínico le invita a descubrir Relief Ukraine y quiere incorporarle en un programa de test genético - '+ randomIdRequest;
     }
 
     if(!instructionsNewAccount){
-      subjectlang='Raito - GTP - A clinician wants to incorporate you into a genetic testing program - '+randomIdRequest;
+      subjectlang='Relief Ukraine - GTP - A clinician wants to incorporate you into a genetic testing program - '+randomIdRequest;
       if(lang=='es'){
-        subjectlang='Raito - GTP - Un clínico quiere incorporarle en un programa de test genético - '+randomIdRequest;
+        subjectlang='Relief Ukraine - GTP - Un clínico quiere incorporarle en un programa de test genético - '+randomIdRequest;
       }
     }
 
@@ -1105,16 +1105,16 @@ function sendMail_request_genetic_program_patient (email, clinicalEmail, lang, p
 function sendMail_request_genetic_program_clinician (email, clinicalEmail, lang, patientId, randomIdRequest){
   //caso 1.1.1
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-raito.png';
+    var urlImg = 'https://raito29.azurewebsites.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
 
-    var subjectlang='Raito - GTP - continue the process - '+randomIdRequest;
+    var subjectlang='Relief Ukraine - GTP - continue the process - '+randomIdRequest;
 
     if(lang=='es'){
-      subjectlang='Raito - GTP - CONTINUAR CON EL PROCESO - '+ randomIdRequest;
+      subjectlang='Relief Ukraine - GTP - CONTINUAR CON EL PROCESO - '+ randomIdRequest;
     }
 
     var attachments = [];
@@ -1347,10 +1347,10 @@ function sendMailResultsUndiagnosed (email, msg, symptoms, diseases, lang, dateH
     ];
 
     var mailOptions = {};
-    var subjectlang = 'Raito results';
+    var subjectlang = 'Relief Ukraine results';
 
     if(lang=='es'){
-      subjectlang='Resultados de Raito';
+      subjectlang='Resultados de Relief Ukraine';
     }
 
     const ts_hms = new Date();    
@@ -1432,10 +1432,10 @@ function sendMailResultsDiagnosed (email, msg, symptoms, disease, lang, dateHead
     ];
 
     var mailOptions = {};
-    var subjectlang = 'Raito results';
+    var subjectlang = 'Relief Ukraine results';
 
     if(lang=='es'){
-      subjectlang='Resultados de Raito';
+      subjectlang='Resultados de Relief Ukraine';
     }
 
 
@@ -1517,10 +1517,10 @@ function sendRevolution (email, lang, bodyAttachments){
     ];
 
     var mailOptions = {};
-    var subjectlang = 'Raito Revolution';
+    var subjectlang = 'Relief Ukraine Revolution';
 
     if(lang=='es'){
-      subjectlang='Revolución de Raito';
+      subjectlang='Revolución de Relief Ukraine';
     }
 
     mailOptions = {
