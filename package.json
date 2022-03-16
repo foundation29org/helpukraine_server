@@ -1,7 +1,7 @@
 {
-  "name": "ReliefUkraine-server",
+  "name": "Raito-server",
   "version": "1.0.0",
-  "description": "Relief Ukraine server",
+  "description": "Raito server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

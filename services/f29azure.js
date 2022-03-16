@@ -100,7 +100,7 @@ async function createContainers(containerName) {
 
 async function createContainerIfNotExists() {
   var listPatients = [];
-  await User.find({ platform: "Raito" }, async (err, users) => {
+  await User.find({ platform: "Relief Ukraine" }, async (err, users) => {
     if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
     if (users) {
       for (var i = 0; i < users.length; i++) {
@@ -160,7 +160,7 @@ async function streamToBuffer(readableStream) {
 
 async function seeSharing() {
   var listPatients = [];
-  await User.find({ platform: "Raito" }, async (err, users) => {
+  await User.find({ platform: "Relief Ukraine" }, async (err, users) => {
     if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
     if (users) {
       for (var i = 0; i < users.length; i++) {

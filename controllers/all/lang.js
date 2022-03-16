@@ -10,7 +10,7 @@ const crypt = require('../../services/crypt')
 /**
  * @api {get} https://health29.org/api/langs/ Get languages
  * @apiName getLangs
- * @apiDescription This method return the languages available in Raito. you get a list of languages, and for each one you have the name and the code.
+ * @apiDescription This method return the languages available in Relief Ukraine. you get a list of languages, and for each one you have the name and the code.
  * We currently have 5 languages, but we will include more. The current languages are:
  * * English: en
  * * Spanish: es

@@ -214,7 +214,7 @@ function addToMySharedList(patientId, role, isNewUser, user, email, lang, patien
 											var mydata = {myEmail:userOwner.email, myRole: userOwner.role, myUserName: userOwner.userName};
 											serviceEmail.sendMailNewClinicialShare(email, patientName, lang, internalmessage, message, usercre.email, mydata)
 												.then(response => {
-													return res.status(200).send({message: 'A request has been submitted for the creation of a new account at Raito'})
+													return res.status(200).send({message: 'A request has been submitted for the creation of a new account at Relief Ukraine'})
 												})
 												.catch(response => {
 													return res.status(200).send({message: 'Email cant sent'})
@@ -342,7 +342,7 @@ function resendAddToMySharedList(role, isNewUser, email, lang, patientName, res,
 						var mydata = {myEmail:userOwner.email, myRole: userOwner.role, myUserName: userOwner.userName};
 						serviceEmail.sendMailNewClinicialShare(email, patientName, lang, internalmessage, message, usercre.email, mydata)
 							.then(response => {
-								return res.status(200).send({message: 'A request has been submitted for the creation of a new account at Raito'})
+								return res.status(200).send({message: 'A request has been submitted for the creation of a new account at Relief Ukraine'})
 							})
 							.catch(response => {
 								return res.status(200).send({message: 'Email cant sent'})

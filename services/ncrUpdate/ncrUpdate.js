@@ -16,7 +16,7 @@ const blobInfo = require('../blob.js')
 
 async function getPatientsAndUpdateEnterValuesListToUpdate(){
     var listPatients=[];
-    await User.find({platform : "Raito"},async (err, users) => {
+    await User.find({platform : "Relief Ukraine"},async (err, users) => {
         if (err) return res.status(500).send({message: `Error making the request: ${err}`})
         if(users){
             for(var i = 0; i < users.length; i++) {
