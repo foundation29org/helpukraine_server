@@ -78,6 +78,7 @@ api.get('/users/name/:userId', auth(roles.All), userCtrl.getUserName)
 api.get('/users/email/:userId', auth(roles.All), userCtrl.getUserEmail)
 api.get('/patient/email/:patientId', auth(roles.All), userCtrl.getPatientEmail)
 api.get('/verified/:userId', auth(roles.All), userCtrl.isVerified)
+api.put('/users/changeiscaregiver/:userId', auth(roles.AllLessResearcher), userCtrl.changeiscaregiver)
 
 //export data
 api.get('/exportdata/:patientId', auth(roles.All), exportCtrl.getData)

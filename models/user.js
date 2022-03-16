@@ -52,7 +52,8 @@ const UserSchema = Schema({
 	platform: { type: String, default: '' },
 	verified: { type: Boolean, default: false },
 	countryselectedPhoneCode: { type: String, default: '' },
-	phone: { type: String, default: '' }
+	phone: { type: String, default: '' },
+	iscaregiver: { type: Boolean, default: false }
 })
 
 

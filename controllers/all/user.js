@@ -904,9 +904,9 @@ function getUserName(req, res) {
 	User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
 		if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
 		if (user) {
-			res.status(200).send({ userName: user.userName, lastName: user.lastName })
+			res.status(200).send({ userName: user.userName, lastName: user.lastName, iscaregiver: user.iscaregiver })
 		}else{
-			res.status(200).send({ userName: '', lastName: ''})
+			res.status(200).send({ userName: '', lastName: '', iscaregiver:false})
 		}
 		
 	})
@@ -956,6 +956,18 @@ function isVerified(req, res) {
 	})
 }
 
+function changeiscaregiver (req, res){
+
+	let userId= crypt.decrypt(req.params.userId);//crypt.decrypt(req.params.patientId);
+
+	User.findByIdAndUpdate(userId, { iscaregiver: req.body.iscaregiver }, {select: '-createdBy', new: true}, (err,userUpdated) => {
+		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
+
+			res.status(200).send({message: 'iscaregiver changed'})
+
+	})
+}
+
 module.exports = {
 	activateUser,
 	recoverPass,
@@ -971,5 +983,6 @@ module.exports = {
 	getUserName,
 	getUserEmail,
 	getPatientEmail,
-	isVerified
+	isVerified,
+	changeiscaregiver
 }

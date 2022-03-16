@@ -76,13 +76,11 @@ function getUsers (req, res){
 							totalPatients = totalPatients + 1;
 								
 								var enc = false;
-								var patientName = '';
-								var surname = '';
-								var gender = '';
 								var birthDate = '';
 								var lat = '';
 								var lng = '';
 								var status = '';
+								var needShelter = '';
 								var notes = '';
 								var needs = '';
 								var drugs = [];
@@ -91,13 +89,11 @@ function getUsers (req, res){
 								var userId = crypt.encrypt(idUserDecrypt);
 								for(var j = 0; j < temppatients.length && !enc; j++) {
 									if((temppatients[j].createdBy).toString() === (user._id).toString()){
-										patientName = temppatients[j].patientName
-										surname = temppatients[j].surname
-										gender = temppatients[j].gender
 										birthDate = temppatients[j].birthDate
 										lat = temppatients[j].lat
 										lng = temppatients[j].lng
 										status = temppatients[j].status
+										needShelter = temppatients[j].needShelter
 										notes = temppatients[j].notes
 										needs = temppatients[j].needs
 										drugs = temppatients[j].drugs
@@ -106,7 +102,8 @@ function getUsers (req, res){
 										enc = true;
 									}
 								}
-								listPatients.push({userId: userId, userName: user.userName, email: user.email, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, patientId:idencrypt, patientName: patientName, surname: surname, gender: gender, birthDate: birthDate, lat: lat, lng: lng, status: status, notes: notes, needs: needs, drugs: drugs, subgroup: user.subgroup});
+								var userName = user.userName+' '+user.lastName;
+								listPatients.push({userId: userId, userName: userName, email: user.email, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, iscaregiver: user.iscaregiver, patientId:idencrypt, birthDate: birthDate, lat: lat, lng: lng, status: status, needShelter: needShelter, notes: notes, needs: needs, drugs: drugs, subgroup: user.subgroup});
 								patientsAddded++;
 						}else{
 							listPatients.push({});
