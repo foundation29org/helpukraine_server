@@ -29,5 +29,7 @@ module.exports = {
   dx29Gateway: process.env.DX29GATEWAY, // DX29 API GATEWAY
   dxv2api: process.env.DXV2 || 'https://app.dx29.ai',
   dxv2apiAuth: process.env.DXV2AUTH, // token for dxv2api
-  OPENAI_API_KEY:process.env.OPENAI_API_KEY // secret token for OPENAI_API_KEY
+  OPENAI_API_KEY:process.env.OPENAI_API_KEY // secret token for OPENAI_API_KEY,
+  TA_KEY: process.env.TA_KEY, // secret key for text analitycs for health azure
+  TA_ENDPOINT: process.env.TA_ENDPOINT // endpoint text analitycs for health azure
 }

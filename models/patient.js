@@ -29,6 +29,7 @@ const PatientSchema = Schema({
 	death: Date,
 	notes: {type: String, default: ''},
 	needs: {type: String, default: ''},
+	needsOther: {type: String, default: ''},
 	sharing: {type: Object, default: []},
 	status: {type: String, default: null},
 	lastAccess: {type: Date, default: Date.now},
