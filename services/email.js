@@ -52,6 +52,7 @@ function sendMailVerifyEmail (email, randomstring, lang, group){
     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
         console.log(error);
+        sendMailFailSend(email)
         reject({
           status: 401,
           message: 'Fail sending email'
@@ -63,6 +64,34 @@ function sendMailVerifyEmail (email, randomstring, lang, group){
 
   });
   return decoded
+}
+
+function sendMailFailSend (email){
+    var maillistbcc = [
+      TRANSPORTER_OPTIONS.auth.user
+    ];
+
+    var emailToFinal = 'support@foundation29.org'
+    var mailOptions = {
+      to: emailToFinal,
+      from: TRANSPORTER_OPTIONS.auth.user,
+      bcc: maillistbcc,
+      subject: 'Message for support. Fail email: '+ email,
+      template: 'mail_support/fail',
+      context: {
+        email : email
+      }
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('send ok');
+      }
+    });
+
+  
 }
 
 function sendMailRecoverPass (email, randomstring, lang){
@@ -101,6 +130,7 @@ function sendMailRecoverPass (email, randomstring, lang){
     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
         console.log(error);
+        sendMailFailSend(email)
         reject({
           status: 401,
           message: 'Fail sending email'
@@ -230,6 +260,7 @@ function sendMailSupport (email, lang, role, supportStored, emailTo){
     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
         console.log(error);
+        sendMailFailSend(email)
         reject({
           status: 401,
           message: 'Fail sending email'
