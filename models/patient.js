@@ -37,6 +37,7 @@ const PatientSchema = Schema({
 	previousDiagnosis: {type: String, default: null},
 	avatar: String,
 	group: { type: String, default: null},
+	othergroup: {type: String, default: null},
 	consentgroup: {type: Boolean, default: false},
 	needShelter: {type: Boolean, default: false},
 	drugs: {type: Object, default: []}
