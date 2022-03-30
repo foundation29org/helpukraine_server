@@ -223,6 +223,19 @@ function changenotes (req, res){
 	})
 }
 
+function getGroupRequest (req, res){
+	let userId= crypt.decrypt(req.params.userId);
+	RequestClin.findOne({"createdBy": userId}, {"createdBy" : false},(err, eventsdb) => {
+		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
+		if(eventsdb){
+			res.status(200).send({groupId: eventsdb.group})
+		}else{
+			res.status(200).send({groupId: '622f83174c824c0dec16c78b'})
+		}
+		
+	});
+}
+
 
 module.exports = {
 	getRequests,
@@ -233,5 +246,6 @@ module.exports = {
 	setChecks,
 	getChecks,
 	setStatus,
-	changenotes
+	changenotes,
+	getGroupRequest
 }

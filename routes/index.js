@@ -283,6 +283,7 @@ api.put('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.setChe
 api.get('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.getChecks)
 api.put('/requestclin/status/:requestId', auth(roles.AdminSuperAdmin), requestCliCtrl.setStatus)
 api.put('/requestclin/changenotes/:requestId', auth(roles.AllLessResearcher), requestCliCtrl.changenotes)
+api.get('/requestclin/group/:userId', auth(roles.AdminClinical), requestCliCtrl.getGroupRequest)
 
 /*api.get('/testToken', auth, (req, res) => {
 	res.status(200).send(true)
