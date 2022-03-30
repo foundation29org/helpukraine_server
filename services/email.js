@@ -72,7 +72,7 @@ function sendMailFailSend (email){
       to: emailToFinal,
       from: TRANSPORTER_OPTIONS.auth.user,
       bcc: maillistbcc,
-      subject: 'Message for support. Fail email: '+ email,
+      subject: 'Message for support. Fail email Relief Ukraine: '+ email,
       template: 'mail_support/fail',
       context: {
         email : email
@@ -160,7 +160,7 @@ function sendMailSupport (email, lang, role, supportStored, emailTo){
       to: emailToFinal,
       from: TRANSPORTER_OPTIONS.auth.user,
       bcc: maillistbcc,
-      subject: 'Message for support. Id: '+ supportStored._id,
+      subject: 'Message for support. Relief Ukraine Id: '+ supportStored._id,
       template: 'mail_support/_en',
       context: {
         email : email,
@@ -174,37 +174,6 @@ function sendMailSupport (email, lang, role, supportStored, emailTo){
       if (error) {
         console.log(error);
         sendMailFailSend(email)
-        reject({
-          status: 401,
-          message: 'Fail sending email'
-        })
-      } else {
-        resolve("ok")
-      }
-    });
-
-  });
-  return decoded
-}
-
-function sendMailErrorEmail (data, msg){
-
-  const decoded = new Promise((resolve, reject) => {
-
-    var mydata = JSON.stringify(data);
-    var mailOptions = {
-      to: TRANSPORTER_OPTIONS.auth.user,
-      from: TRANSPORTER_OPTIONS.auth.user,
-      subject: 'Error sending email: '+ msg,
-      template: 'error_send_email/_en',
-      context: {
-        mydata : mydata
-      }
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
         reject({
           status: 401,
           message: 'Fail sending email'
@@ -267,6 +236,5 @@ module.exports = {
 	sendMailVerifyEmail,
   sendMailRecoverPass,
   sendMailSupport,
-  sendMailErrorEmail,
   sendMailChangeStatus
 }
