@@ -83,7 +83,6 @@ function getUsers (req, res){
 								var needShelter = '';
 								var notes = '';
 								var needsOther = '';
-								var needs = '';
 								var othergroup = '';
 								var drugs = [];
 								var idencrypt = '';
@@ -98,7 +97,6 @@ function getUsers (req, res){
 										othergroup = temppatients[j].othergroup
 										needShelter = temppatients[j].needShelter
 										notes = temppatients[j].notes
-										needs = temppatients[j].needs
 										needsOther = temppatients[j].needsOther
 										drugs = temppatients[j].drugs
 										var idPatientrDecrypt = temppatients[j]._id.toString();
@@ -107,7 +105,7 @@ function getUsers (req, res){
 									}
 								}
 								var userName = user.userName+' '+user.lastName;
-								listPatients.push({userId: userId, userName: userName, email: user.email, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, iscaregiver: user.iscaregiver, patientId:idencrypt, birthDate: birthDate, lat: lat, lng: lng, status: status, othergroup: othergroup, needShelter: needShelter, notes: notes, needs: needs, needsOther: needsOther, drugs: drugs, subgroup: user.subgroup});
+								listPatients.push({userId: userId, userName: userName, email: user.email, lang: user.lang, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, iscaregiver: user.iscaregiver, patientId:idencrypt, birthDate: birthDate, lat: lat, lng: lng, status: status, othergroup: othergroup, needShelter: needShelter, notes: notes, needsOther: needsOther, drugs: drugs, subgroup: user.subgroup});
 								patientsAddded++;
 						}else{
 							listPatients.push({});

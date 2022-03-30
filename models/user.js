@@ -53,7 +53,9 @@ const UserSchema = Schema({
 	verified: { type: Boolean, default: false },
 	countryselectedPhoneCode: { type: String, default: '' },
 	phone: { type: String, default: '' },
-	iscaregiver: { type: Boolean, default: false }
+	iscaregiver: { type: Boolean, default: false },
+	lat: {type: String, default: ''},
+	lng: {type: String, default: ''}
 })
 
 
@@ -119,10 +121,6 @@ UserSchema.statics.getAuthenticated = function (email, password, cb) {
 		// make sure the user exists
 		if (!user) {
 			return cb(null, null, reasons.NOT_FOUND);
-		}
-		console.log(user.role);
-		if (user.role != 'User' && user.role != 'Admin') {
-			return cb(null, null, reasons.WRONG_PLATFORM);
 		}
 		//Check if the account is activated.
 		if (!user.confirmed) {

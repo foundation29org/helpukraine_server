@@ -904,11 +904,24 @@ function getUserName(req, res) {
 	User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
 		if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
 		if (user) {
-			res.status(200).send({ userName: user.userName, lastName: user.lastName, iscaregiver: user.iscaregiver })
+			res.status(200).send({ userName: user.userName, lastName: user.lastName, iscaregiver: user.iscaregiver, lat: user.lat, lng: user.lng })
 		}else{
-			res.status(200).send({ userName: '', lastName: '', iscaregiver:false})
+			res.status(200).send({ userName: '', lastName: '', iscaregiver:false, lat: '', lng: ''})
 		}
 		
+	})
+}
+
+
+function setPosition (req, res){
+
+	let userId= crypt.decrypt(req.params.userId);//crypt.decrypt(req.params.patientId);
+	console.log(req.body);
+	User.findByIdAndUpdate(userId, { lat: req.body.lat, lng: req.body.lng }, {select: '-createdBy', new: true}, (err,userUpdated) => {
+		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
+			console.log(userUpdated);
+			res.status(200).send({message: 'location updated'})
+
 	})
 }
 
@@ -984,5 +997,6 @@ module.exports = {
 	getUserEmail,
 	getPatientEmail,
 	isVerified,
-	changeiscaregiver
+	changeiscaregiver,
+	setPosition
 }

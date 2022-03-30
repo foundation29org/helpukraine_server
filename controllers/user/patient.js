@@ -8,6 +8,7 @@ const User = require('../../models/user')
 const Phenotype = require ('../../models/phenotype')
 const crypt = require('../../services/crypt')
 const f29azureService = require("../../services/f29azure")
+const serviceEmail = require('../../services/email')
 
 /**
  * @api {get} https://health29.org/api/patients-all/:userId Get patient list of a user
@@ -463,6 +464,13 @@ function getStatus (req, res){
 
 function setStatus (req, res){
 	let patientId= crypt.decrypt(req.params.patientId);
+	serviceEmail.sendMailChangeStatus(req.body.email, req.body.lang, req.body.group, req.body.statusInfo)
+					.then(response => {
+						console.log('Email sent' )
+					})
+					.catch(response => {
+						console.log('Fail sending email' )
+					})
 	Patient.findByIdAndUpdate(patientId, { status: req.body.status }, {new: true}, (err,patientUpdated) => {
 		if(patientUpdated){
 			return res.status(200).send({message: 'Updated'})

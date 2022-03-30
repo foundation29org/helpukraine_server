@@ -17,7 +17,6 @@ const Height = require('../../../models/height')
 
 
 const Group = require('../../../models/group')
-const { sendEmailInfoPermissions } = require('../../../services/email')
 
 function getData(req, res) {
 	let patientId = crypt.decrypt(req.params.patientId);

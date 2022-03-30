@@ -23,7 +23,6 @@ const f29bioserviceCtrl = require('../services/f29bio')
 const f29azureserviceCtrl = require('../services/f29azure')
 const f29gatewayCtrl = require('../services/f29gateway')
 const f29patientgroupsCtrl = require('../services/f29patientGroups')
-const sendEmailCtrl = require('../services/sendEmails')
 const wikiCtrl = require('../services/wikipedia')
 const openAIserviceCtrl = require('../services/openai')
 
@@ -32,11 +31,6 @@ const diagnosisCasesCtrl = require('../controllers/clinical/diagnosis-clinical')
 
 const supportCtrl = require('../controllers/all/support')
 
-const shareOrInviteCtrl = require('../controllers/all/share')
-
-const captchaServiceCtrl = require('../services/captcha')
-
-const feedbackDevCtrl = require('../controllers/all/feedback_dev')
 const seizuresCtrl = require('../controllers/user/patient/seizures')
 const groupCtrl = require('../controllers/all/group')
 const medicationCtrl = require('../controllers/user/patient/medication')
@@ -51,6 +45,8 @@ const heightCtrl = require('../controllers/user/patient/height')
 
 const openRaitoCtrl = require('../controllers/all/openraito')
 const admninUsersCtrl = require('../controllers/admin/users')
+
+const requestCliCtrl = require('../controllers/user/request-clin')
 
 const auth = require('../middlewares/auth')
 const roles = require('../middlewares/roles')
@@ -79,6 +75,7 @@ api.get('/users/email/:userId', auth(roles.All), userCtrl.getUserEmail)
 api.get('/patient/email/:patientId', auth(roles.All), userCtrl.getPatientEmail)
 api.get('/verified/:userId', auth(roles.All), userCtrl.isVerified)
 api.put('/users/changeiscaregiver/:userId', auth(roles.AllLessResearcher), userCtrl.changeiscaregiver)
+api.put('/users/location/:userId', auth(roles.AllLessResearcher), userCtrl.setPosition)
 
 //export data
 api.get('/exportdata/:patientId', auth(roles.All), exportCtrl.getData)
@@ -163,18 +160,6 @@ api.put('/support/:supportId', auth(roles.AdminSuperAdmin), supportCtrl.updateMs
 api.get('/support/all/:userId', auth(roles.SuperAdmin), supportCtrl.getAllMsgs)
 api.post('/support/all/:userId', auth(roles.AdminSuperAdmin), supportCtrl.getAllMsgs)
 
-api.post('/shareorinvite/', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.shareOrInviteWith)
-api.post('/resendshareorinvite/', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.resendShareOrInviteWith)
-//api.get('/sharingaccounts/:patientId', auth, shareOrInviteCtrl.getDataFromSharingAccounts) //no se usa
-api.post('/revokepermission/:patientId', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.revokepermission)
-api.post('/rejectpermission/:patientId', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.rejectpermission)
-api.post('/setpermission/:patientId', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.setPermissions)
-api.post('/sharingaccountsclinical/:userId', auth(roles.UserClinicalSuperAdmin), shareOrInviteCtrl.getDataFromSharingAccountsListPatients)
-api.post('/updatepermissions/', shareOrInviteCtrl.updatepermissions)
-api.post('/updateshowSwalIntro/:patientId', auth(roles.ClinicalSuperAdmin), shareOrInviteCtrl.updateshowSwalIntro)
-
-
-api.get('/verifyingcaptcha/:token', captchaServiceCtrl.verifyingcaptcha) // no se usa
 
 //services f29ncr
 api.post('/annotate_batch/', f29ncrserviceCtrl.getAnnotate_batch)
@@ -192,16 +177,8 @@ api.post('/Translation/document/translate2', f29bioserviceCtrl.getTranslationDic
 api.post('/getDetectLanguage', f29azureserviceCtrl.getDetectLanguage)
 //api.post('/getDetectLanguage', auth(roles.UserClinicalSuperAdmin), f29azureserviceCtrl.getDetectLanguage)
 
-api.post('/sendEmailResultsUndiagnosed', sendEmailCtrl.sendResultsUndiagnosed)
-api.post('/sendEmailResultsDiagnosed', sendEmailCtrl.sendResultsDiagnosed)
-api.post('/sendEmailRevolution', sendEmailCtrl.sendRevolution)
-
-
 api.post('/getTranslationDictionary', auth(roles.UserClinicalSuperAdmin), f29azureserviceCtrl.getTranslationDictionary)
 api.get('/getAzureBlobSasTokenWithContainer/:containerName', auth(roles.AllLessResearcher), f29azureserviceCtrl.getAzureBlobSasTokenWithContainer)
-
-//service feedback
-api.post('/feedbackdev', auth(roles.UserClinicalSuperAdmin), feedbackDevCtrl.sendMsgDev)
 
 //gateway
 api.post('/gateway/Diagnosis/calculate/:lang', f29gatewayCtrl.calculateDiagnosis)
@@ -296,6 +273,15 @@ api.get('/admin/users/:groupName', auth(roles.Readers), admninUsersCtrl.getUsers
 api.put('/admin/patients/:patientId', auth(roles.Admin), admninUsersCtrl.setDeadPatient)
 api.put('/admin/users/subgroup/:userId', auth(roles.Admin), admninUsersCtrl.setSubgroupUser)
 api.put('/admin/users/state/:userId', auth(roles.Admin), admninUsersCtrl.setStateUser)
+
+api.get('/requestclin/:userId', auth(roles.AdminClinical), requestCliCtrl.getRequests)
+api.get('/admin/requestclin/:groupName', auth(roles.Admin), requestCliCtrl.getRequestsAdmin)
+api.post('/requestclin/:userId', auth(roles.AdminClinical), requestCliCtrl.saveRequest)
+api.put('/requestclin/:requestId', auth(roles.AdminClinical), requestCliCtrl.updateRequest)
+api.delete('/requestclin/:requestId', auth(roles.AdminClinical), requestCliCtrl.deleteRequest)
+api.put('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.setChecks)
+api.get('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.getChecks)
+api.put('/requestclin/status/:requestId', auth(roles.AdminSuperAdmin), requestCliCtrl.setStatus)
 
 /*api.get('/testToken', auth, (req, res) => {
 	res.status(200).send(true)

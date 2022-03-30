@@ -11,4 +11,5 @@ module.exports = {
  UserClinical:['User', 'Clinical'],
  UserClinicalSuperAdmin:['User', 'Clinical', 'SuperAdmin'],
  ClinicalSuperAdmin:['Clinical', 'SuperAdmin'],
+ AdminClinical:['Clinical', 'Admin'],
 }

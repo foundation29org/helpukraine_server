@@ -7,6 +7,12 @@ const User = require('./user')
 
 const { conndbaccounts } = require('../db_connect')
 
+const checksSchema = Schema({
+	check1: {type: Boolean, default: false},
+	check2: {type: Boolean, default: false},
+	check3: {type: Boolean, default: false},
+	check4: {type: Boolean, default: false}
+})
 
 const PatientSchema = Schema({
 	patientName: String,
@@ -28,7 +34,6 @@ const PatientSchema = Schema({
 	createdBy: { type: Schema.Types.ObjectId, ref: "User"},
 	death: Date,
 	notes: {type: String, default: ''},
-	needs: {type: String, default: ''},
 	needsOther: {type: String, default: ''},
 	sharing: {type: Object, default: []},
 	status: {type: String, default: null},
@@ -39,6 +44,12 @@ const PatientSchema = Schema({
 	group: { type: String, default: null},
 	othergroup: {type: String, default: null},
 	consentgroup: {type: Boolean, default: false},
+	checks: {type: checksSchema, default: {
+		check1: false,
+		check2: false,
+		check3: false,
+		check4: false
+	}},
 	needShelter: {type: Boolean, default: false},
 	drugs: {type: Object, default: []}
 })
