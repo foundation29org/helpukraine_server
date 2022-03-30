@@ -396,7 +396,7 @@ function changenotes (req, res){
 	Patient.findByIdAndUpdate(patientId, { notes: req.body.notes }, {select: '-createdBy', new: true}, (err,patientUpdated) => {
 		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
 
-			res.status(200).send({message: 'notes changed', patient: patientUpdated})
+			res.status(200).send({message: 'notes changed'})
 
 	})
 }

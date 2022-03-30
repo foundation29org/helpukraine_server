@@ -211,6 +211,18 @@ function setStatus (req, res){
 	})
 }
 
+function changenotes (req, res){
+
+	let requestId= crypt.decrypt(req.params.requestId);//crypt.decrypt(req.params.patientId);
+
+	RequestClin.findByIdAndUpdate(requestId, { notes: req.body.notes }, {select: '-createdBy', new: true}, (err,patientUpdated) => {
+		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
+
+			res.status(200).send({message: 'notes changed'})
+
+	})
+}
+
 
 module.exports = {
 	getRequests,
@@ -220,5 +232,6 @@ module.exports = {
 	deleteRequest,
 	setChecks,
 	getChecks,
-	setStatus
+	setStatus,
+	changenotes
 }

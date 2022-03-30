@@ -282,6 +282,7 @@ api.delete('/requestclin/:requestId', auth(roles.AdminClinical), requestCliCtrl.
 api.put('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.setChecks)
 api.get('/requestclin/checks/:requestId', auth(roles.All), requestCliCtrl.getChecks)
 api.put('/requestclin/status/:requestId', auth(roles.AdminSuperAdmin), requestCliCtrl.setStatus)
+api.put('/requestclin/changenotes/:requestId', auth(roles.AllLessResearcher), requestCliCtrl.changenotes)
 
 /*api.get('/testToken', auth, (req, res) => {
 	res.status(200).send(true)
