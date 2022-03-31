@@ -5,7 +5,6 @@
 // add the patient model
 const Patient = require('../../models/patient')
 const User = require('../../models/user')
-const Phenotype = require ('../../models/phenotype')
 const crypt = require('../../services/crypt')
 const f29azureService = require("../../services/f29azure")
 const serviceEmail = require('../../services/email')

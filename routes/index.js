@@ -7,41 +7,17 @@ const userCtrl = require('../controllers/all/user')
 const langCtrl = require('../controllers/all/lang')
 
 const patientCtrl = require('../controllers/user/patient')
-
-const exportCtrl = require('../controllers/user/patient/export')
 const deleteAccountCtrl = require('../controllers/user/delete')
 
-const phenotypeCtrl = require('../controllers/user/patient/phenotype')
-
 const superAdmninLangCtrl = require('../controllers/superadmin/lang')
-const superadmninUsersClinicalCtrl = require('../controllers/superadmin/users-clinical')
 
-const hpoServiceCtrl = require('../services/hpo-info')
-const f29ncrserviceCtrl = require('../services/f29ncr')
 const f29apiv2serviceCtrl = require('../services/f29apiv2')
 const f29bioserviceCtrl = require('../services/f29bio')
 const f29azureserviceCtrl = require('../services/f29azure')
-const f29gatewayCtrl = require('../services/f29gateway')
-const f29patientgroupsCtrl = require('../services/f29patientGroups')
-const wikiCtrl = require('../services/wikipedia')
-const openAIserviceCtrl = require('../services/openai')
-
-const diagnosisCtrl = require('../controllers/clinical/diagnosis')
-const diagnosisCasesCtrl = require('../controllers/clinical/diagnosis-clinical')
 
 const supportCtrl = require('../controllers/all/support')
 
-const seizuresCtrl = require('../controllers/user/patient/seizures')
 const groupCtrl = require('../controllers/all/group')
-const medicationCtrl = require('../controllers/user/patient/medication')
-
-const feelCtrl = require('../controllers/user/patient/feel')
-const promCtrl = require('../controllers/user/patient/prom')
-
-const docsCtrl = require('../controllers/user/patient/documents')
-
-const weightCtrl = require('../controllers/user/patient/weight')
-const heightCtrl = require('../controllers/user/patient/height')
 
 const openRaitoCtrl = require('../controllers/all/openraito')
 const admninUsersCtrl = require('../controllers/admin/users')
@@ -77,10 +53,6 @@ api.get('/verified/:userId', auth(roles.All), userCtrl.isVerified)
 api.put('/users/changeiscaregiver/:userId', auth(roles.AllLessResearcher), userCtrl.changeiscaregiver)
 api.put('/users/location/:userId', auth(roles.AllLessResearcher), userCtrl.setPosition)
 
-//export data
-api.get('/exportdata/:patientId', auth(roles.All), exportCtrl.getData)
-api.get('/crondatagroups', auth(roles.SuperAdmin), exportCtrl.cronSendData)
-
 //delete account
 api.post('/deleteaccount/:userId', auth(roles.All), deleteAccountCtrl.deleteAccount)
 
@@ -103,16 +75,6 @@ api.get('/patient/checks/:patientId', auth(roles.All), patientCtrl.getChecks)
 api.put('/patient/birthdate/:patientId', auth(roles.All), patientCtrl.setBirthDate)
 api.put('/patient/drugs/:patientId', auth(roles.All), patientCtrl.saveDrugs)
 
-// phenotypeinfo routes, using the controller socialinfo, this controller has methods
-api.get('/phenotypes/:patientId', auth(roles.All), phenotypeCtrl.getPhenotype)
-api.post('/phenotypes/:patientId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.savePhenotype)
-api.put('/phenotypes/:phenotypeId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.updatePhenotype)
-api.delete('/phenotypes/:phenotypeId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.deletePhenotype)//de momento no se usa
-api.get('/phenotypes/history/:patientId', auth(roles.All), phenotypeCtrl.getPhenotypeHistory)//de momento no se usa
-api.delete('/phenotypes/history/:phenotypeId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.deletePhenotypeHistoryRecord)//de momento no se usa
-
-api.put('/symptoms/changesharewithcommunity/:phenotypeId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.setShareWithCommunity)
-api.get('/symptoms/permissions/:patientId', auth(roles.UserClinicalSuperAdmin), phenotypeCtrl.getPermissionsPhenotype)
 
 //superadmin routes, using the controllers of folder Admin, this controller has methods
 api.post('/superadmin/lang/:userId', auth(roles.SuperAdmin), superAdmninLangCtrl.updateLangFile)
@@ -125,31 +87,9 @@ api.put('/superadmin/lang/:userId', auth(roles.SuperAdmin), function(req, res){
 })
 api.delete('/superadmin/lang/:userIdAndLang', auth(roles.SuperAdmin), superAdmninLangCtrl.deletelang)
 
-//api.get('/superadmin/users/', auth(roles.SuperAdmin), superadmninUsersClinicalCtrl.getUsers) //no se usa
-//api.get('/superadmin/infopatients/:userId', auth, superadmninUsersClinicalCtrl.getInfoPatients) //no se usa
-
 // lang routes, using the controller lang, this controller has methods
 api.get('/langs/',  langCtrl.getLangs)
 
-//api.get('/hpoinfoservice', hpoServiceCtrl.getHposInfo) // no se usa
-
-
-//diagnóstico
-
-// diagnosis routes, using the controller diagnosis, this controller has methods
-api.get('/diagnosis/:patientId', auth(roles.All), diagnosisCtrl.getDiagnosis)
-api.post('/diagnosis/:patientId', auth(roles.UserClinicalSuperAdmin), diagnosisCtrl.saveDiagnosis)
-api.put('/diagnosis/:diagnosisId', auth(roles.UserClinicalSuperAdmin), diagnosisCtrl.updateDiagnosis)
-api.delete('/diagnosis/:diagnosisId', auth(roles.UserClinicalSuperAdmin), diagnosisCtrl.deleteDiagnosis)//de momento no se usa
-api.put('/diagnosis/filters/:diagnosisId', auth(roles.ClinicalSuperAdmin), diagnosisCtrl.updateFilters)
-api.put('/diagnosis/relatedconditions/:diagnosisId', auth(roles.ClinicalSuperAdmin), diagnosisCtrl.updateRelatedconditions)
-api.put('/diagnosis/hasvcf/:diagnosisId', auth(roles.UserClinicalSuperAdmin), diagnosisCtrl.updateHasVCF)
-
-api.get('/case/:userId', auth(roles.ClinicalSuperAdmin), diagnosisCasesCtrl.getPatientsInfo)
-api.get('/sharedcase/:userId', auth(roles.UserClinicalSuperAdmin), diagnosisCasesCtrl.getSharedPatientsInfo)
-api.delete('/case/:patientId', auth(roles.ClinicalSuperAdmin), diagnosisCasesCtrl.deleteCase)
-api.get('/case/archive/:patientId', auth(roles.OnlyClinical), diagnosisCasesCtrl.setCaseArchived)
-api.get('/case/restore/:patientId', auth(roles.OnlyClinical), diagnosisCasesCtrl.setCaseRestored)
 
 //Support
 api.post('/support/', auth(roles.UserClinicalSuperAdmin), supportCtrl.sendMsgSupport)
@@ -159,11 +99,6 @@ api.get('/support/:userId', auth(roles.UserClinicalSuperAdmin), supportCtrl.getU
 api.put('/support/:supportId', auth(roles.AdminSuperAdmin), supportCtrl.updateMsg)
 api.get('/support/all/:userId', auth(roles.SuperAdmin), supportCtrl.getAllMsgs)
 api.post('/support/all/:userId', auth(roles.AdminSuperAdmin), supportCtrl.getAllMsgs)
-
-
-//services f29ncr
-api.post('/annotate_batch/', f29ncrserviceCtrl.getAnnotate_batch)
-//api.post('/annotate_batch/', auth(roles.UserClinicalSuperAdmin), f29ncrserviceCtrl.getAnnotate_batch)
 
 //services dx29V2API
 api.post('/callTextAnalytics', f29apiv2serviceCtrl.callTextAnalytics)
@@ -176,85 +111,12 @@ api.post('/Translation/document/translate2', f29bioserviceCtrl.getTranslationDic
 api.post('/getDetectLanguage', auth(roles.All), f29azureserviceCtrl.getDetectLanguage)
 api.get('/getAzureBlobSasTokenWithContainer/:containerName', auth(roles.AllLessResearcher), f29azureserviceCtrl.getAzureBlobSasTokenWithContainer)
 
-//gateway
-api.post('/gateway/Diagnosis/calculate/:lang', f29gatewayCtrl.calculateDiagnosis)
-api.post('/gateway/search/disease/', f29gatewayCtrl.searchDiseases)
-api.post('/gateway/search/symptoms/', f29gatewayCtrl.searchSymptoms)
-
-//wikipedia
-api.post('/wikiSearch', wikiCtrl.callwikiSearch)
-api.post('/wiki', wikiCtrl.callwiki)
-
-//patientGroups
-api.get('/patientgroups/:idDisease', f29patientgroupsCtrl.getPatientGroups)
-
-
-// seizuresCtrl routes, using the controller seizures, this controller has methods
-api.post('/seizures/dates/:patientId', auth(roles.UserResearcher), seizuresCtrl.getSeizuresDate)
-api.get('/seizures/:patientId', auth(roles.UserResearcher), seizuresCtrl.getSeizures)
-api.post('/seizures/:patientId', auth(roles.OnlyUser), seizuresCtrl.saveSeizure)
-api.put('/seizures/:seizureId', auth(roles.OnlyUser), seizuresCtrl.updateSeizure)
-api.delete('/seizures/:seizureId', auth(roles.OnlyUser), seizuresCtrl.deleteSeizure)
-api.post('/massiveseizures/:patientId', auth(roles.OnlyUser), seizuresCtrl.saveMassiveSeizure)
-
 //groups
 api.get('/groupsnames', groupCtrl.getGroupsNames)
 api.get('/groupadmin/:groupName', groupCtrl.getGroupAdmin)
 api.get('/groups', groupCtrl.getGroups)
 api.get('/group/:groupName', auth(roles.All), groupCtrl.getGroup)
-api.get('/group/phenotype/:groupName', auth(roles.All), groupCtrl.getPhenotypeGroup)
-api.get('/group/medications/:groupId', groupCtrl.getMedicationsGroup)
 
-//medications
-api.post('/medications/dates/:patientId', auth(roles.UserResearcher), medicationCtrl.getMedicationsDate)
-api.get('/medications/:patientId', auth(roles.UserResearcher), medicationCtrl.getMedications)
-api.get('/medication/:medicationId', auth(roles.UserResearcher), medicationCtrl.getMedication)
-api.post('/medication/:patientId', auth(roles.OnlyUser), medicationCtrl.saveMedication)
-api.put('/medication/:medicationId', auth(roles.OnlyUser), medicationCtrl.updateMedication)
-api.delete('/medication/:medicationId', auth(roles.OnlyUser), medicationCtrl.deleteDose)
-api.delete('/medications/:drugNameAndPatient', auth(roles.OnlyUser), medicationCtrl.deleteMedication)
-api.get('/medications/all/:drugNameAndPatient', auth(roles.UserResearcher), medicationCtrl.getAllMedicationByNameForPatient)
-
-api.delete('/medications/update/:PatientIdAndMedicationId', auth(roles.OnlyUser), medicationCtrl.deleteMedicationByIDAndUpdateStateForThePrevious)
-api.put('/medication/newdose/:medicationIdAndPatient', auth(roles.OnlyUser), medicationCtrl.newDose)
-api.put('/medication/stoptaking/:medicationId', auth(roles.OnlyUser), medicationCtrl.stoptaking)
-api.put('/medication/changenotes/:medicationId', auth(roles.OnlyUser), medicationCtrl.changenotes)
-api.put('/medication/sideeffect/:medicationId', auth(roles.OnlyUser), medicationCtrl.sideeffect)
-
-// seizuresCtrl routes, using the controller seizures, this controller has methods
-api.post('/feels/dates/:patientId', auth(roles.UserResearcher), feelCtrl.getFeelsDates)
-api.get('/feels/:patientId', auth(roles.UserResearcher), feelCtrl.getFeels)
-api.post('/feel/:patientId', auth(roles.OnlyUser), feelCtrl.saveFeel)
-api.delete('/feel/:feelId', auth(roles.OnlyUser), feelCtrl.deleteFeel)
-
-//proms
-api.post('/prom/dates/:patientId', auth(roles.UserResearcher), promCtrl.getPromsDates)
-api.get('/prom/:patientId', auth(roles.UserResearcher), promCtrl.getProms)
-api.post('/prom/:patientId', auth(roles.OnlyUser), promCtrl.saveProm)
-api.post('/proms/:patientId', auth(roles.OnlyUser), promCtrl.savesProm)
-api.put('/prom/:promId', auth(roles.OnlyUser), promCtrl.updateProm)
-api.delete('/prom/:promId', auth(roles.OnlyUser), promCtrl.deleteProm)
-
-// seizuresCtrl routes, using the controller seizures, this controller has methods
-api.get('/documents/:patientId', auth(roles.UserResearcher), docsCtrl.getDocuments)
-api.post('/document/:patientId', auth(roles.OnlyUser), docsCtrl.saveDocument)
-api.put('/document/:documentId', auth(roles.OnlyUser), docsCtrl.updateDocument)
-api.delete('/document/:documentId', auth(roles.OnlyUser), docsCtrl.deleteDocument)
-
-// weightinfo routes, using the controller socialinfo, this controller has methods
-api.get('/weight/:patientId', auth(roles.UserResearcher), weightCtrl.getWeight)
-api.get('/weights/:patientId', auth(roles.UserResearcher), weightCtrl.getHistoryWeight)
-api.post('/weight/:patientId', auth(roles.OnlyUser), weightCtrl.saveWeight)
-api.delete('/weight/:weightId', auth(roles.OnlyUser), weightCtrl.deleteWeight)//de momento no se usa
-
-// heighteinfo routes, using the controller socialinfo, this controller has methods
-api.get('/height/:patientId', auth(roles.UserResearcher), heightCtrl.getHeight)
-api.get('/heights/:patientId', auth(roles.UserResearcher), heightCtrl.getHistoryHeight)
-api.post('/height/:patientId', auth(roles.OnlyUser), heightCtrl.saveHeight)
-api.delete('/height/:heightId', auth(roles.OnlyUser), heightCtrl.deleteHeight)//de momento no se usa
-
-//services OPENAI
-api.post('/callopenai', auth(roles.OnlyUser), openAIserviceCtrl.callOpenAi)
 
 // openraito
 api.get('/openraito/patient/generalshare/:patientId', auth(roles.UserResearcher), openRaitoCtrl.getGeneralShare)

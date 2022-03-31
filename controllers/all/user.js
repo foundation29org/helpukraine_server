@@ -6,7 +6,6 @@
 const User = require('../../models/user')
 const Patient = require('../../models/patient')
 const Support = require('../../models/support')
-const Programs = require('../../models/genomic-programs')
 const serviceAuth = require('../../services/auth')
 const serviceEmail = require('../../services/email')
 const crypt = require('../../services/crypt')
@@ -29,63 +28,6 @@ function activateUser(req, res) {
 				let userId = user2._id
 				User.findByIdAndUpdate(userId, update, (err, userUpdated) => {
 					if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
-					//mirar si el usuario tiene rol User, y está el email en algún programa, si es así, cambiar a el paciente y asignarle createdBy del nuevo usuario, y compartirlo con el clínico que era el createdBy
-					if (userUpdated.role == 'User') {
-						//Programs.find({}, function(err, programs) {
-						//lo he comprobado que funcione
-						Programs.find({ 'requests.email': userUpdated.email }, (err, programs) => {
-							if (programs != undefined) {
-								var foundUserEmail = false;
-								for (var j = 0; j < programs.length && !foundUserEmail; j++) {
-									var program = programs[j];
-									Programs.findById(program._id, (err, programdb) => {
-										if (err) return res.status(500).send({ message: `Error deleting the case: ${err}` })
-										if (programdb) {
-
-											for (var i = 0; i < programdb.requests.length && !foundUserEmail; i++) {
-												if (programdb.requests[i].email == userUpdated.email) {
-													foundUserEmail = true;
-													//update createdBy of patient
-													let userIdCreatedBy = programdb.requests[i].idUser;
-													let decryptUserId = crypt.decrypt(programdb.requests[i].idUser);
-													let patientId = crypt.decrypt(programdb.requests[i].patientId);
-													var newUserId = userUpdated._id;
-
-													User.findById(decryptUserId, (err, clinicalUser) => {
-														if (clinicalUser) {
-															Patient.findByIdAndUpdate(patientId, { createdBy: newUserId }, { new: true }, (err, patientUpdated) => {
-																if (err) return res.status(500).send({ message: `Error making the request: ${err}` })
-
-																//update sharing, for clinician
-																var date = Date.now();
-																var permissions = { "shareEmr": true, "askFirst": false, "shareWithAll": false };
-																patientUpdated.sharing.push({ _id: userIdCreatedBy, state: '', role: 'Clinical', email: clinicalUser.email, permissions: permissions, invitedby: userIdCreatedBy, patientName: patientUpdated.patientName, date: date, showSwalIntro: true });
-																Patient.findByIdAndUpdate(patientId, { sharing: patientUpdated.sharing }, { new: true }, (err, patientUpdated) => {
-																	//enviar un email avisando?
-																})
-
-
-															})
-														}
-													});
-
-												}
-											}
-											if (!foundUserEmail) {
-
-
-											}
-										} else {
-											return res.status(200).send({ message: 'program not found' })
-										}
-									})
-								}
-							}
-						});
-
-
-					}
-
 					res.status(200).send({ message: 'activated' })
 				})
 			} else {
