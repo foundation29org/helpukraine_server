@@ -574,29 +574,8 @@ function savePatient(userId, req) {
 		var id = patientStored._id.toString();
 		var idencrypt = crypt.encrypt(id);
 		var patientInfo = { sub: idencrypt, patientName: patient.patientName, surname: patient.surname, birthDate: patient.birthDate, gender: patient.gender, country: patient.country, previousDiagnosis: patient.previousDiagnosis, avatar: patient.avatar, consentgroup: patient.consentgroup };
-		let containerName = (idencrypt).substr(1);
-		var result = await f29azureService.createContainers(containerName);
-		if (result) {
-			console.log('Patient created' + patientInfo);
-			//res.status(200).send({message: 'Patient created', patientInfo})
-		} else {
-			deletePatientAndCreateOther(patientStored._id, req, userId);
-		}
+		console.log('Patient created' + patientInfo);
 
-	})
-}
-
-function deletePatientAndCreateOther(patientId, req, userId) {
-
-	Patient.findById(patientId, (err, patient) => {
-		if (err) return console.log({ message: `Error deleting the patient: ${err}` })
-		if (patient) {
-			patient.remove(err => {
-				savePatient(userId, req)
-			})
-		} else {
-			savePatient(userId, req)
-		}
 	})
 }
 

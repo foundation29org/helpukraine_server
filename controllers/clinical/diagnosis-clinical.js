@@ -243,10 +243,7 @@ function returnResultGetSharedPatientsInfo(listpatients, length, res, objReturn)
 }
 
 function deleteCase (req, res){
-	let containerName = (req.params.patientId).substr(1);
 	let patientId= crypt.decrypt(req.params.patientId);
-
-	//var patientId = patient._id.toString();
 
 	let diagnosisId=req.params.diagnosisId
 
@@ -255,39 +252,37 @@ function deleteCase (req, res){
 		if(diagnosis){
 			diagnosis.remove(err => {
 				if(err) return res.status(500).send({message: `Error deleting the diagnosis: ${err}`})
-				deletePhenotype(res, patientId, containerName);
+				deletePhenotype(res, patientId);
 			})
 		}else{
-			 deletePhenotype(res, patientId, containerName);
+			 deletePhenotype(res, patientId);
 		}
 	})
 }
 
-function deletePhenotype (res, patientId, containerName){
+function deletePhenotype (res, patientId){
 	Phenotype.findOne({ 'createdBy': patientId }, (err, phenotype) => {
 		if (err) return res.status(500).send({message: `Error deleting the case: ${err}`})
 		if(phenotype){
 			phenotype.remove(err => {
 				if(err) return res.status(500).send({message: `Error deleting the case: ${err}`})
-				deletePatient(res, patientId, containerName);
+				deletePatient(res, patientId);
 			})
 		}else{
-			 deletePatient(res, patientId, containerName);
+			 deletePatient(res, patientId);
 		}
 	})
 }
 
-function deletePatient (res, patientId, containerName){
+function deletePatient (res, patientId){
 	Patient.findById(patientId, (err, patient) => {
 		if (err) return res.status(500).send({message: `Error deleting the case: ${err}`})
 		if(patient){
 			patient.remove(err => {
 				if(err) return res.status(500).send({message: `Error deleting the case: ${err}`})
-				f29azureService.deleteContainers(containerName)
 				res.status(200).send({message: `The case has been eliminated`})
 			})
 		}else{
-				f29azureService.deleteContainers(containerName);
 			 return res.status(202).send({message: 'The case has been eliminated'})
 		}
 	})

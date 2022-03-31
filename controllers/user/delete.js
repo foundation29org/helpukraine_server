@@ -7,8 +7,6 @@ const User = require('../../models/user')
 const Patient = require('../../models/patient')
 const crypt = require('../../services/crypt')
 
-const f29azureService = require("../../services/f29azure")
-
 function deleteAccount (req, res){
 	console.log(req.body);
 	req.body.email = (req.body.email).toLowerCase();
@@ -23,9 +21,7 @@ function deleteAccount (req, res){
 		
 				patients.forEach(function(u) {
 					var patientId = u._id.toString();
-					var patientIdCrypt=crypt.encrypt(u._id.toString());
-					var containerName=patientIdCrypt.substr(1).toString();
-					deletePatient(res, patientId, containerName, userId);
+					deletePatient(res, patientId, userId);
 				});
 				//deleteUser(res, userId);
 			})
@@ -36,18 +32,16 @@ function deleteAccount (req, res){
 }
 
 
-function deletePatient (res, patientId, containerName, userId){
+function deletePatient (res, patientId, userId){
 	Patient.findById(patientId, (err, patient) => {
 		if (err) return res.status(500).send({message: `Error deleting the case: ${err}`})
 		if(patient){
 			patient.remove(err => {
 				if(err) return res.status(500).send({message: `Error deleting the case: ${err}`})
-				f29azureService.deleteContainers(containerName)
 				savePatient(userId);
 				res.status(200).send({message: `The case has been eliminated`})
 			})
 		}else{
-				f29azureService.deleteContainers(containerName);
 				savePatient(userId);
 				return res.status(202).send({message: 'The case has been eliminated'})
 		}
@@ -79,29 +73,8 @@ function savePatient(userId) {
 		var id = patientStored._id.toString();
 		var idencrypt = crypt.encrypt(id);
 		var patientInfo = { sub: idencrypt, patientName: patient.patientName, surname: patient.surname, birthDate: patient.birthDate, gender: patient.gender, country: patient.country, previousDiagnosis: patient.previousDiagnosis, avatar: patient.avatar, consentgroup: patient.consentgroup };
-		let containerName = (idencrypt).substr(1);
-		var result = await f29azureService.createContainers(containerName);
-		if (result) {
-			console.log('Patient created' + patientInfo);
-			//res.status(200).send({message: 'Patient created', patientInfo})
-		} else {
-			deletePatientAndCreateOther(patientStored._id, userId);
-		}
+		console.log('Patient created' + patientInfo);
 
-	})
-}
-
-function deletePatientAndCreateOther(patientId, userId) {
-
-	Patient.findById(patientId, (err, patient) => {
-		if (err) return console.log({ message: `Error deleting the patient: ${err}` })
-		if (patient) {
-			patient.remove(err => {
-				savePatient(userId)
-			})
-		} else {
-			savePatient(userId)
-		}
 	})
 }
 

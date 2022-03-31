@@ -171,13 +171,9 @@ api.post('/callTextAnalytics', f29apiv2serviceCtrl.callTextAnalytics)
 //services f29bio
 api.post('/Translation/document/translate', f29bioserviceCtrl.getTranslationDictionary)
 api.post('/Translation/document/translate2', f29bioserviceCtrl.getTranslationDictionary2)
-//api.post('/Translation/document/translate', auth(roles.UserClinicalSuperAdmin), f29bioserviceCtrl.getTranslationDictionary)
 
 //services f29azure
-api.post('/getDetectLanguage', f29azureserviceCtrl.getDetectLanguage)
-//api.post('/getDetectLanguage', auth(roles.UserClinicalSuperAdmin), f29azureserviceCtrl.getDetectLanguage)
-
-api.post('/getTranslationDictionary', auth(roles.UserClinicalSuperAdmin), f29azureserviceCtrl.getTranslationDictionary)
+api.post('/getDetectLanguage', auth(roles.All), f29azureserviceCtrl.getDetectLanguage)
 api.get('/getAzureBlobSasTokenWithContainer/:containerName', auth(roles.AllLessResearcher), f29azureserviceCtrl.getAzureBlobSasTokenWithContainer)
 
 //gateway

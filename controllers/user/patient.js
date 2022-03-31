@@ -267,30 +267,9 @@ function savePatient (req, res){
 		var id = patientStored._id.toString();
 		var idencrypt= crypt.encrypt(id);
 		var patientInfo = {sub:idencrypt, patientName: patient.patientName, surname: patient.surname, birthDate: patient.birthDate, gender: patient.gender, country: patient.country, previousDiagnosis: patient.previousDiagnosis, avatar: patient.avatar, group: patient.group, consentgroup: patient.consentgroup};
-		let containerName = (idencrypt).substr(1);
-		var result = await f29azureService.createContainers(containerName);
-    if(result){
-      res.status(200).send({message: 'Patient created', patientInfo})
-    }else{
-      deletePatientAndCreateOther(patientStored._id, req, res);
-    }
-
+		res.status(200).send({message: 'Patient created', patientInfo})
 	})
 }
-
-  function deletePatientAndCreateOther(patientId, req, res){
-
-  	Patient.findById(patientId, (err, patient) => {
-  		if (err) return res.status(500).send({message: `Error deleting the patient: ${err}`})
-  		if(patient){
-  			patient.remove(err => {
-  				savePatient(req, res)
-  			})
-  		}else{
-  			 savePatient(req, res)
-  		}
-  	})
-  }
 
 
 /**
@@ -366,8 +345,6 @@ function updatePatient (req, res){
 		var id = patientUpdated._id.toString();
 		var idencrypt= crypt.encrypt(id);
 		var patientInfo = {sub:idencrypt, patientName: patientUpdated.patientName, surname: patientUpdated.surname, birthDate: patientUpdated.birthDate, gender: patientUpdated.gender, country: patientUpdated.country, previousDiagnosis: patientUpdated.previousDiagnosis, avatar: patientUpdated.avatar, group: patientUpdated.group, consentgroup: patientUpdated.consentgroup};
-		let containerName = (idencrypt).substr(1);
-		var result = await f29azureService.createContainers(containerName);
 		res.status(200).send({message: 'Patient updated', patientInfo})
 
 	})
