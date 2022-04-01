@@ -232,9 +232,87 @@ function sendMailChangeStatus (email, lang, group, statusInfo){
   return decoded
 }
 
+function sendNotificationNewUser (email, emailUser){
+  var subjectlang='Relief Ukraine - A new user has signed up.';
+
+  const decoded = new Promise((resolve, reject) => {
+    var urlImg = 'https://reliefukraine.net/assets/img/logo-reliefukraine.png';
+    var maillistbcc = [
+      TRANSPORTER_OPTIONS.auth.user
+    ];
+
+    var mailOptions = {
+      to: email,
+      from: TRANSPORTER_OPTIONS.auth.user,
+      bcc: maillistbcc,
+      subject: subjectlang,
+      template: 'notification_new_user/_en',
+      context: {
+        emailUser : emailUser,
+        urlImg: urlImg
+      }
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        sendMailFailSend(email)
+        reject({
+          status: 401,
+          message: 'Fail sending email'
+        })
+      } else {
+        resolve("ok")
+      }
+    });
+
+  });
+  return decoded
+}
+
+function sendNotificationUpdateUser (email, emailUser){
+  var subjectlang='Relief Ukraine - A user has modified their data.';
+
+  const decoded = new Promise((resolve, reject) => {
+    var urlImg = 'https://reliefukraine.net/assets/img/logo-reliefukraine.png';
+    var maillistbcc = [
+      TRANSPORTER_OPTIONS.auth.user
+    ];
+
+    var mailOptions = {
+      to: email,
+      from: TRANSPORTER_OPTIONS.auth.user,
+      bcc: maillistbcc,
+      subject: subjectlang,
+      template: 'notification_update_user/_en',
+      context: {
+        emailUser : emailUser,
+        urlImg: urlImg
+      }
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        sendMailFailSend(email)
+        reject({
+          status: 401,
+          message: 'Fail sending email'
+        })
+      } else {
+        resolve("ok")
+      }
+    });
+
+  });
+  return decoded
+}
+
 module.exports = {
 	sendMailVerifyEmail,
   sendMailRecoverPass,
   sendMailSupport,
-  sendMailChangeStatus
+  sendMailChangeStatus,
+  sendNotificationNewUser,
+  sendNotificationUpdateUser
 }

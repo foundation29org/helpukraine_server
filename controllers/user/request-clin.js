@@ -6,6 +6,7 @@
 const RequestClin = require('../../models/request-clin')
 const crypt = require('../../services/crypt')
 const User = require('../../models/user')
+const Group = require('../../models/group')
 const serviceEmail = require('../../services/email')
 
 function getRequests (req, res){
@@ -123,31 +124,45 @@ function saveRequest (req, res){
 			res.status(500).send({message: `Failed to save in the database: ${err} `})
 		}
 		if(eventdbStored){
+			notifyGroup(eventdb.group, 'New', userId);
 			res.status(200).send({message: 'Eventdb created'});
-			//podría devolver eventdbStored, pero no quiero el field createdBy, asi que hago una busqueda y que no saque ese campo
-			/*Seizures.findOne({"createdBy": userId}, {"createdBy" : false }, (err, eventdb2) => {
-				if (err) return res.status(500).send({message: `Error making the request: ${err}`})
-				if(!eventdb2) return res.status(202).send({message: `There are no eventdb`})
-				res.status(200).send({message: 'Eventdb created', eventdb: eventdb2})
-			})*/
 		}
-
-
 	})
-
-
 }
 
 function updateRequest (req, res){
 	let requestId= req.params.requestId;
 	let update = req.body
 	update.updateDate = Date.now();
-	RequestClin.findByIdAndUpdate(requestId, update, {select: '-createdBy', new: true}, (err,eventdbUpdated) => {
+	RequestClin.findByIdAndUpdate(requestId, update, { new: true}, (err,eventdbUpdated) => {
 		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
-
-		res.status(200).send({message: 'Request updated', eventdb: eventdbUpdated})
+		notifyGroup(eventdbUpdated.group, 'Update', eventdbUpdated.createdBy);
+		res.status(200).send({message: 'Request updated'})
 
 	})
+}
+
+function notifyGroup(groupid, state, userId){
+	Group.findById(groupid, function (err, group) {
+        if(group){
+			if(group.notifications.isNew && state == 'New'){
+				User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
+					if (user) {
+						serviceEmail.sendNotificationNewUser(group.email, user.email)
+					}
+				})
+				
+			}
+			if(group.notifications.changeData && state == 'Update'){
+				User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
+					if (user) {
+						serviceEmail.sendNotificationUpdateUser(group.email, user.email)
+					}
+				})
+				
+			}
+		}
+      })
 }
 
 

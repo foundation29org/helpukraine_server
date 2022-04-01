@@ -15,7 +15,12 @@ const GroupSchema = Schema({
 	order: Number,
 	defaultLang: {type: String, default: 'en'},
 	phenotype: {type: Object, default: []},
-	medications: {type: Object, default: []}
+	medications: {type: Object, default: []},
+	notifications: {type: Object, default: {
+		isNew: true,
+		changeData: true,
+		updatedBy: null
+	}}
 })
 
 module.exports = conndbaccounts.model('Group',GroupSchema)

@@ -59,20 +59,14 @@ api.post('/deleteaccount/:userId', auth(roles.All), deleteAccountCtrl.deleteAcco
 // patient routes, using the controller patient, this controller has methods
 api.get('/patients-all/:userId', auth(roles.All), patientCtrl.getPatientsUser)
 api.get('/patients/:patientId', auth(roles.All), patientCtrl.getPatient)
-api.post('/patients/:userId', auth(roles.UserClinical), patientCtrl.savePatient)
 api.put('/patients/:patientId', auth(roles.UserClinical), patientCtrl.updatePatient)
-api.delete('/patients/:patientId', auth(roles.UserClinical), patientCtrl.deletePatient)//de momento no se usa
 api.put('/patients/changenotes/:patientId', auth(roles.AllLessResearcher), patientCtrl.changenotes)
-api.put('/case/changename/:patientId', auth(roles.UserClinical), patientCtrl.changecasename)
-api.put('/case/changesharedname/:patientId', auth(roles.OnlyClinical), patientCtrl.changesharedcasename)
-api.get('/case/updateLastAccess/:patientId', auth(roles.OnlyClinical), patientCtrl.updateLastAccess)
 api.get('/patient/status/:patientId', auth(roles.AdminSuperAdmin), patientCtrl.getStatus)
 api.put('/patient/status/:patientId', auth(roles.AdminSuperAdmin), patientCtrl.setStatus)
 api.put('/patient/consentgroup/:patientId', auth(roles.All), patientCtrl.consentgroup)
 api.get('/patient/consentgroup/:patientId', auth(roles.All), patientCtrl.getConsentGroup)
 api.put('/patient/checks/:patientId', auth(roles.All), patientCtrl.setChecks)
 api.get('/patient/checks/:patientId', auth(roles.All), patientCtrl.getChecks)
-api.put('/patient/birthdate/:patientId', auth(roles.All), patientCtrl.setBirthDate)
 api.put('/patient/drugs/:patientId', auth(roles.All), patientCtrl.saveDrugs)
 
 
@@ -116,6 +110,8 @@ api.get('/groupsnames', groupCtrl.getGroupsNames)
 api.get('/groupadmin/:groupName', groupCtrl.getGroupAdmin)
 api.get('/groups', groupCtrl.getGroups)
 api.get('/group/:groupName', auth(roles.All), groupCtrl.getGroup)
+api.get('/group/notifications/:userId', auth(roles.Admin), groupCtrl.getNotifications)
+api.put('/group/notifications/:userId', auth(roles.Admin), groupCtrl.setNotifications)
 
 
 // openraito

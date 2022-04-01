@@ -7,6 +7,7 @@ const Patient = require('../../models/patient')
 const User = require('../../models/user')
 const crypt = require('../../services/crypt')
 const f29azureService = require("../../services/f29azure")
+const Group = require('../../models/group')
 const serviceEmail = require('../../services/email')
 
 /**
@@ -173,104 +174,6 @@ function getPatient (req, res){
 	})
 }
 
-
-/**
- * @api {post} https://health29.org/api/patients/:userId New Patient
- * @apiName savePatient
- * @apiDescription This method allows to create a new Patient
- * @apiGroup Patients
- * @apiVersion 1.0.0
- * @apiExample {js} Example usage:
- *   var patient = {patientName: '', surname: '', street: '', postalCode: '', citybirth: '', provincebirth: '', countrybirth: null, city: '', province: '', country: null, phone1: '', phone2: '', birthDate: null, gender: null, siblings: [], parents: []};
- *   this.http.post('https://health29.org/api/patients/'+userId, patient)
- *    .subscribe( (res : any) => {
- *      console.log('patient info: '+ res.patientInfo);
- *     }, (err) => {
- *      ...
- *     }
- *
- * @apiHeader {String} authorization Users unique access-key. For this, go to  [Get token](#api-Access_token-signIn)
- * @apiHeaderExample {json} Header-Example:
- *     {
- *       "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciPgDIUzI1NiJ9.eyJzdWIiOiI1M2ZlYWQ3YjY1YjM0ZTQ0MGE4YzRhNmUyMzVhNDFjNjEyOThiMWZjYTZjMjXkZTUxMTA9OGVkN2NlODMxYWY3IiwiaWF0IjoxNTIwMzUzMDMwLCJlcHAiOjE1NTE4ODkwMzAsInJvbGUiOiJVc2VyIiwiZ3JvdDEiOiJEdWNoZW5uZSBQYXJlbnQgUHJfrmVjdCBOZXRoZXJsYW5kcyJ9.MloW8eeJ857FY7-vwxJaMDajFmmVStGDcnfHfGJx05k"
- *     }
- * @apiParam {String} userId User unique ID. More info here:  [Get token and userId](#api-Access_token-signIn)
- * @apiParam (body) {string="male","female"} gender Gender of the Patient.
- * @apiParam (body) {String} phone1 Phone number of the Patient.
- * @apiParam (body) {String} phone2 Other phone number of the Patient.
- * @apiParam (body) {String} country Country code of residence of the Patient. (<a href="https://github.com/astockwell/countries-and-provinces-states-regions" target="_blank">ISO_3166-2</a>)
- * @apiParam (body) {String} province Province or region code of residence of the Patient. (<a href="https://github.com/astockwell/countries-and-provinces-states-regions" target="_blank">ISO_3166-2</a>)
- * @apiParam (body) {String} city City of residence of the Patient.
- * @apiParam (body) {String} [postalCode] PostalCode of residence of the Patient.
- * @apiParam (body) {String} [street] Street of residence of the Patient.
- * @apiParam (body) {String} countrybirth Country birth of the Patient. (<a href="https://github.com/astockwell/countries-and-provinces-states-regions" target="_blank">ISO_3166-2</a>)
- * @apiParam (body) {String} provincebirth Province birth of the Patient. (<a href="https://github.com/astockwell/countries-and-provinces-states-regions" target="_blank">ISO_3166-2</a>)
- * @apiParam (body) {String} citybirth City birth of the Patient.
- * @apiParam (body) {Date} birthDate Date of birth of the patient.
- * @apiParam (body) {String} patientName Name of the Patient.
- * @apiParam (body) {String} surname Surname of the Patient.
- * @apiParam (body) {Object} [parents] Data about parents of the Patient. The highEducation field can be ... The profession field is a free field
- * @apiParam (body) {Object} [siblings] Data about siblings of the Patient. The affected field can be yes or no. The gender field can be male or female
- * @apiSuccess {Object} patientInfo patientId, name, and surname.
- * @apiSuccess {String} message If the patient has been created correctly, it returns the message 'Patient created'.
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
- * {"patientInfo":
- *  {
- *   "sub": "1499bb6faef2c95364e2f4tt2c9aef05abe2c9c72110a4514e8c4c3fb038ff30",
- *   "patientName": "Jhon",
- *   "surname": "Doe"
- *  },
- * "message": "Patient created"
- * }
- *
- */
-
-function savePatient (req, res){
-	let userId= crypt.decrypt(req.params.userId);
-
-	let patient = new Patient()
-	patient.patientName = req.body.patientName
-	patient.surname = req.body.surname
-	patient.birthDate = req.body.birthDate
-	patient.citybirth = req.body.citybirth
-	patient.provincebirth = req.body.provincebirth
-	patient.countrybirth = req.body.countrybirth
-	patient.street = req.body.street
-	patient.postalCode = req.body.postalCode
-	patient.city = req.body.city
-	patient.province = req.body.province
-	patient.country = req.body.country
-	patient.gender = req.body.gender
-	patient.siblings = req.body.siblings
-	patient.parents = req.body.parents
-	patient.relationship = req.body.relationship
-	patient.previousDiagnosis = req.body.previousDiagnosis
-	patient.consentgroup = req.body.consentgroup
-	patient.group = req.body.group
-	patient.avatar = req.body.avatar
-	patient.createdBy = userId
-
-  if(req.body.avatar==undefined){
-    if(patient.gender!=undefined){
-      if(patient.gender=='male'){
-				patient.avatar='boy-0'
-			}else if(patient.gender=='female'){
-				patient.avatar='girl-0'
-			}
-    }
-  }
-	// when you save, returns an id in patientStored to access that patient
-	patient.save (async (err, patientStored) => {
-		if (err) res.status(500).send({message: `Failed to save in the database: ${err} `})
-		var id = patientStored._id.toString();
-		var idencrypt= crypt.encrypt(id);
-		var patientInfo = {sub:idencrypt, patientName: patient.patientName, surname: patient.surname, birthDate: patient.birthDate, gender: patient.gender, country: patient.country, previousDiagnosis: patient.previousDiagnosis, avatar: patient.avatar, group: patient.group, consentgroup: patient.consentgroup};
-		res.status(200).send({message: 'Patient created', patientInfo})
-	})
-}
-
-
 /**
  * @api {put} https://health29.org/api/patients/:patientId Update Patient
  * @apiName updatePatient
@@ -344,24 +247,15 @@ function updatePatient (req, res){
 		var id = patientUpdated._id.toString();
 		var idencrypt= crypt.encrypt(id);
 		var patientInfo = {sub:idencrypt, patientName: patientUpdated.patientName, surname: patientUpdated.surname, birthDate: patientUpdated.birthDate, gender: patientUpdated.gender, country: patientUpdated.country, previousDiagnosis: patientUpdated.previousDiagnosis, avatar: patientUpdated.avatar, group: patientUpdated.group, consentgroup: patientUpdated.consentgroup};
+		
+		if(req.body.group==patientUpdated.group){
+			notifyGroup(patientUpdated.group, 'Update', patientUpdated.createdBy);
+		}else{
+			notifyGroup(patientUpdated.group, 'New', patientUpdated.createdBy);
+		}
+		
 		res.status(200).send({message: 'Patient updated', patientInfo})
 
-	})
-}
-
-function deletePatient (req, res){
-	let patientId=req.params.patientId
-
-	Patient.findById(patientId, (err, patient) => {
-		if (err) return res.status(500).send({message: `Error deleting the patient: ${err}`})
-		if(patient){
-			patient.remove(err => {
-				if(err) return res.status(500).send({message: `Error deleting the patient: ${err}`})
-				res.status(200).send({message: `The patient has been eliminated`})
-			})
-		}else{
-			 return res.status(202).send({message: 'The patient does not exist'})
-		}
 	})
 }
 
@@ -375,55 +269,6 @@ function changenotes (req, res){
 			res.status(200).send({message: 'notes changed'})
 
 	})
-}
-
-function changecasename (req, res){
-
-  let patientId= crypt.decrypt(req.params.patientId);//crypt.decrypt(req.params.patientId);
-
-  Patient.findByIdAndUpdate(patientId, { patientName: req.body.patientName }, {select: '-createdBy', new: true}, (err,patientUpdated) => {
-    if (err) return res.status(500).send({message: `Error making the request: ${err}`})
-      res.status(200).send({message: 'case name changed'})
-      //res.status(200).send({message: 'case name changed', patient: patientUpdated})
-
-	})
-}
-
-function changesharedcasename (req, res){
-
-  let patientId= crypt.decrypt(req.params.patientId);
-  var patientName = req.body.patientName
-  var email = req.body.email
-
-  Patient.findById(patientId, (err, patient) => {
-    if (err) return res.status(500).send({message: `Error searching the user: ${err}`})
-    if(patient){
-      var countSharing = patient.sharing.length;
-      var positionUser = 0;
-      var foundUserEmail = false;
-      for (var i = 0; i < patient.sharing.length && !foundUserEmail; i++) {
-        if(patient.sharing[i].email == email){
-          patient.sharing[i].patientName = patientName;
-          foundUserEmail = true;
-        }
-      }
-      if(foundUserEmail){
-
-        Patient.findByIdAndUpdate(patientId, { sharing: patient.sharing }, {new: true}, (err,patientUpdated) => {
-          if(patientUpdated){
-            return res.status(200).send({message: 'alias changed'})
-          }else{
-            return res.status(200).send({message: 'error'})
-          }
-        })
-
-      }else{
-        return res.status(200).send({message: 'UserId not found'})
-      }
-    }else{
-      return res.status(200).send({message: 'Patient not found'})
-    }
-  })
 }
 
 function getStatus (req, res){
@@ -453,19 +298,6 @@ function setStatus (req, res){
 		}else{
 			console.log(err);
 			return res.status(200).send({message: 'error'})
-		}
-	})
-}
-
-function updateLastAccess (req, res){
-	let patientId= crypt.decrypt(req.params.patientId);
-	var actualDate = Date.now();
-	Patient.findByIdAndUpdate(patientId, {lastAccess: actualDate }, {new: true}, (err,patientUpdated) => {
-		if(patientUpdated){
-      res.status(200).send({message: 'Updated'})
-		}else{
-		console.log(err);
-    res.status(200).send({message: 'error'})
 		}
 	})
 }
@@ -516,46 +348,51 @@ function getChecks (req, res){
 	})
 }
 
-function setBirthDate (req, res){
-
-	let patientId= crypt.decrypt(req.params.patientId);
-
-	Patient.findByIdAndUpdate(patientId, { birthDate: req.body.birthDate }, {select: '-createdBy', new: true}, (err,patientUpdated) => {
-		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
-
-			res.status(200).send({message: 'birthDate changed'})
-
-	})
-}
-
 function saveDrugs (req, res){
 
 	let patientId= crypt.decrypt(req.params.patientId);
 
-	Patient.findByIdAndUpdate(patientId, { drugs: req.body.drugs }, {select: '-createdBy', new: true}, (err,patientUpdated) => {
+	Patient.findByIdAndUpdate(patientId, { drugs: req.body.drugs }, { new: true}, (err,patientUpdated) => {
 		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
-
+			notifyGroup(patientUpdated.group, 'Update', patientUpdated.createdBy);
 			res.status(200).send({message: 'drugs changed'})
 
 	})
 }
 
+function notifyGroup(groupid, state, userId){
+	Group.findById(groupid, function (err, group) {
+        if(group){
+			if(group.notifications.isNew && state == 'New'){
+				User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
+					if (user) {
+						serviceEmail.sendNotificationNewUser(group.email, user.email)
+					}
+				})
+				
+			}
+			if(group.notifications.changeData && state == 'Update'){
+				User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
+					if (user) {
+						serviceEmail.sendNotificationUpdateUser(group.email, user.email)
+					}
+				})
+				
+			}
+		}
+      })
+}
+
 module.exports = {
 	getPatientsUser,
 	getPatient,
-	savePatient,
 	updatePatient,
-	deletePatient,
 	changenotes,
-	changecasename,
-  changesharedcasename,
-  getStatus,
+  	getStatus,
 	setStatus,
-  updateLastAccess, 
-  consentgroup,
-  getConsentGroup,
-  setChecks,
-  getChecks,
-  setBirthDate,
-  saveDrugs
+	consentgroup,
+	getConsentGroup,
+	setChecks,
+	getChecks,
+	saveDrugs
 }
