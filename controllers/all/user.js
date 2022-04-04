@@ -97,7 +97,7 @@ function recoverPass(req, res) {
 				User.findByIdAndUpdate(user._id, user, (err, userUpdated) => {
 					if (err) return res.status(500).send({ message: 'Error saving the user' })
 
-					serviceEmail.sendMailRecoverPass(req.body.email, randomstring, user.lang)
+					serviceEmail.sendMailRecoverPass(req.body.email, user.userName, randomstring, user.lang)
 						.then(response => {
 							return res.status(200).send({ message: 'Email sent' })
 						})
@@ -415,42 +415,6 @@ function signUp(req, res) {
 			user.save((err, userSaved) => {
 				if (err) return res.status(500).send({ message: `Error creating the user: ${err}` })
 
-				if (req.body.patientId != undefined) {
-					var tempo = req.body.patientId
-					let patientIdt = crypt.decrypt(tempo)
-					//let patientId= crypt.decrypt(req.params.patientId);
-
-					Patient.findById(patientIdt, { "createdBy": false }, (err, patient) => {
-						if (err) {
-							console.log('falla');
-							console.log(err)
-						}
-						if (patient) {
-							var id = userSaved._id.toString();
-							var userId = crypt.encrypt(id);
-							//mirar si ya está compartido
-							var found = false;
-							for (var i = 0; i < patient.sharing.length && !found; i++) {
-								if (patient.sharing[i]._id == userId) {
-									found = true;
-								}
-							}
-							if (!found) {
-								patient.sharing.push({ _id: userId });
-								Patient.findByIdAndUpdate(patientIdt, { sharing: patient.sharing }, { new: true }, (err, patientUpdated) => {
-									if (err) {
-										console.log(err);
-									}
-									if (patientUpdated) {
-										//console.log(patientUpdated);
-									}
-								})
-							}
-
-						}
-					})
-				}
-
 				//Create the patient
 				console.log(req.body.role);
 				if (req.body.role == 'User') {
@@ -460,7 +424,7 @@ function signUp(req, res) {
 
 
 
-				serviceEmail.sendMailVerifyEmail(req.body.email, randomstring, req.body.lang, req.body.group)
+				serviceEmail.sendMailVerifyEmail(req.body.email, req.body.userName, randomstring, req.body.lang, req.body.group)
 					.then(response => {
 						res.status(200).send({ message: 'Account created' })
 					})
@@ -528,7 +492,7 @@ function sendEmail(req, res) {
 		if (err) return res.status(500).send({ message: `Error finding the user: ${err}` })
 		if (user) {
 			if (req.body.type == "resendEmail") {
-				serviceEmail.sendMailVerifyEmail(req.body.email, randomstring, req.body.lang, user.group)
+				serviceEmail.sendMailVerifyEmail(req.body.email, user.userName, randomstring, req.body.lang, user.group)
 					.then(response => {
 						res.status(200).send({ message: 'Email resent' })
 					})

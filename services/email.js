@@ -17,7 +17,7 @@ var options = {
  var transporter = nodemailer.createTransport(TRANSPORTER_OPTIONS);
  transporter.use('compile', hbs(options));
 
-function sendMailVerifyEmail (email, randomstring, lang, group){
+function sendMailVerifyEmail (email, userName, randomstring, lang, group){
 
   var subjectlang='Relief Ukraine - Activate the account';
   if(lang=='es'){
@@ -26,7 +26,6 @@ function sendMailVerifyEmail (email, randomstring, lang, group){
     subjectlang='Relief Ukraine - Активуйте обліковий запис';
   }
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://reliefukraine.net/assets/img/logo-reliefukraine.png';
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
@@ -40,8 +39,8 @@ function sendMailVerifyEmail (email, randomstring, lang, group){
       context: {
         client_server : client_server,
         email : email,
-        key : randomstring,
-        urlImg: urlImg
+        userName : userName,
+        key : randomstring
       }
     };
 
@@ -90,7 +89,7 @@ function sendMailFailSend (email){
   
 }
 
-function sendMailRecoverPass (email, randomstring, lang){
+function sendMailRecoverPass (email, userName, randomstring, lang){
   var subjectlang='Relief Ukraine - Account Recovery';
   if(lang=='es'){
     subjectlang='Relief Ukraine - Recuperación de la cuenta';
@@ -98,7 +97,6 @@ function sendMailRecoverPass (email, randomstring, lang){
     subjectlang='Relief Ukraine - Відновлення облікового запису';
   }
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://reliefukraine.net/assets/img/logo-reliefukraine.png';
 
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user,
@@ -114,7 +112,7 @@ function sendMailRecoverPass (email, randomstring, lang){
         client_server : client_server,
         email : email,
         key : randomstring,
-        urlImg: urlImg
+        userName: userName
       }
     };
 
@@ -187,7 +185,7 @@ function sendMailSupport (email, lang, role, supportStored, emailTo){
   return decoded
 }
 
-function sendMailChangeStatus (email, lang, group, statusInfo){
+function sendMailChangeStatus (email, userName, lang, group, statusInfo, groupEmail){
   var subjectlang='Relief Ukraine - Information about your case progress';
   if(lang=='es'){
     subjectlang='Relief Ukraine - Información sobre el progreso de su caso';
@@ -196,7 +194,6 @@ function sendMailChangeStatus (email, lang, group, statusInfo){
   }
 
   const decoded = new Promise((resolve, reject) => {
-    var urlImg = 'https://reliefukraine.net/assets/img/logo-reliefukraine.png';
     var maillistbcc = [
       TRANSPORTER_OPTIONS.auth.user
     ];
@@ -211,7 +208,8 @@ function sendMailChangeStatus (email, lang, group, statusInfo){
         client_server : client_server,
         status : statusInfo,
         group : group,
-        urlImg: urlImg
+        userName: userName,
+        groupEmail: groupEmail
       }
     };
 
@@ -219,6 +217,46 @@ function sendMailChangeStatus (email, lang, group, statusInfo){
       if (error) {
         console.log(error);
         sendMailFailSend(email)
+        reject({
+          status: 401,
+          message: 'Fail sending email'
+        })
+      } else {
+        resolve("ok")
+      }
+    });
+
+  });
+  return decoded
+}
+
+function sendNotificationToTheNewUser (emailUser, userName, lang){
+  var subjectlang='Relief Ukraine -  Information about your case progress';
+  if(lang=='es'){
+    subjectlang='Relief Ukraine - Información sobre el progreso de su caso';
+  }else if(lang=='uk'){
+    subjectlang='Relief Ukraine - Інформація про хід справи';
+  }
+  const decoded = new Promise((resolve, reject) => {
+    var maillistbcc = [
+      TRANSPORTER_OPTIONS.auth.user
+    ];
+
+    var mailOptions = {
+      to: emailUser,
+      from: TRANSPORTER_OPTIONS.auth.user,
+      bcc: maillistbcc,
+      subject: subjectlang,
+      template: 'notification_to_new_user/_'+lang,
+      context: {
+        userName : userName
+      }
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        sendMailFailSend(emailUser)
         reject({
           status: 401,
           message: 'Fail sending email'
@@ -313,6 +351,7 @@ module.exports = {
   sendMailRecoverPass,
   sendMailSupport,
   sendMailChangeStatus,
+  sendNotificationToTheNewUser,
   sendNotificationNewUser,
   sendNotificationUpdateUser
 }

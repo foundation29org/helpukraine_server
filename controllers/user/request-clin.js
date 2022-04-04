@@ -149,6 +149,9 @@ function notifyGroup(groupid, state, userId){
 				User.findById(userId, { "_id": false, "password": false, "__v": false, "confirmationCode": false, "loginAttempts": false, "confirmed": false, "role": false, "lastLogin": false }, (err, user) => {
 					if (user) {
 						serviceEmail.sendNotificationNewUser(group.email, user.email)
+						if(groupid == '622f83174c824c0dec16c78b'){
+							serviceEmail.sendNotificationToTheNewUser(user.email, user.userName, user.lang)
+						}
 					}
 				})
 				
@@ -208,7 +211,7 @@ function getChecks (req, res){
 
 function setStatus (req, res){
 	let requestId= crypt.decrypt(req.params.requestId);
-	serviceEmail.sendMailChangeStatus(req.body.email, req.body.lang, req.body.group, req.body.statusInfo)
+	serviceEmail.sendMailChangeStatus(req.body.email, req.body.userName, req.body.lang, req.body.group, req.body.statusInfo, req.body.groupEmail)
 					.then(response => {
 						console.log('Email sent' )
 					})
