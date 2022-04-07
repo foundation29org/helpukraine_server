@@ -5,6 +5,8 @@
 // add the user model
 const User = require('../../models/user')
 const Patient = require('../../models/patient')
+const RequestClin = require('../../models/request-clin')
+const Support = require('../../models/support')
 const crypt = require('../../services/crypt')
 
 
@@ -52,7 +54,118 @@ const crypt = require('../../services/crypt')
  *
  */
 
-function getUsers (req, res){
+ async function getUsers(req, res) {
+	try {
+		let group = req.params.groupName;
+		var patients = await getPatients(group);
+		var requestClin = await getRequestClin(group);
+		var data = await getInfoUsers(patients, requestClin);
+		return res.status(200).send(data)
+	} catch (e) {
+		console.error("Error: ", e);
+	}
+}
+
+function getPatients(group) {
+	return new Promise(resolve => {
+		var listPatients = [];
+		Patient.find({group: group},(err, patients) => {
+			if (patients) {
+				patients.forEach(patient => {
+					patient.role = 'User'
+					listPatients.push(patient);
+				});
+			}
+			resolve(listPatients);
+		});
+	});
+}
+
+function getRequestClin(group) {
+	return new Promise(resolve => {
+		var listPatients = [];
+		RequestClin.find({group: group},(err, patients) => {
+			if (patients) {
+				patients.forEach(patient => {
+					patient.role = 'Clinical'
+					listPatients.push(patient);
+				});
+			}
+			resolve(listPatients);
+		});
+	});
+}
+
+async function getInfoUsers(patients, requestClin) {
+	return new Promise(async function (resolve, reject) {
+		var promises = [];
+		for (var indexPatient in patients) {
+			promises.push(getInfoUser(patients[indexPatient]));
+		}
+		for (var indexPatient in requestClin) {
+			promises.push(getInfoUser(requestClin[indexPatient]));
+		}
+		await Promise.all(promises)
+			.then(async function (data) {
+				console.log('termina')
+				resolve(data)
+			})
+			.catch(function (err) {
+				console.log('Manejar promesa rechazada (' + err + ') aquí.');
+				return null;
+			});
+
+	});
+}
+
+async function getInfoUser(patient) {
+	return new Promise(async function (resolve, reject) {
+		await User.findOne({"_id": patient.createdBy},async (err, user) => {
+			if (err) {
+				console.log(err);
+				resolve(err)
+			}
+			var idUserDecrypt = user._id.toString();
+			var userId = crypt.encrypt(idUserDecrypt);
+			var idPatientrDecrypt = patient._id.toString();
+			var idencrypt= crypt.encrypt(idPatientrDecrypt);
+			var userName = user.userName+' '+user.lastName;
+			var msgs = await getsMsg(idUserDecrypt);
+			var unread = false;
+			if(msgs.length>0){
+				msgs.forEach(function(u) {
+					if(u.status=='unread'){
+						unread = true;
+					}
+				})
+					
+			}
+			var resp = {userId: userId, userName: userName, email: user.email, lang: user.lang, phone: user.phone, countryPhoneCode: user.countryselectedPhoneCode, signupDate: user.signupDate, lastLogin: user.lastLogin, blockedaccount: user.blockedaccount, iscaregiver: user.iscaregiver, patientId:idencrypt, birthDate: patient.birthDate, lat: patient.lat, lng: patient.lng, status: patient.status, othergroup: patient.othergroup, needShelter: patient.needShelter, notes: patient.notes, needsOther: patient.needsOther, drugs: patient.drugs, subgroup: user.subgroup, role: patient.role, msgs: msgs, unread: unread}
+			resolve(resp);
+		})
+	});
+}
+
+function getsMsg(userId) {
+	return new Promise(async function (resolve, reject) {
+		Support.find({ createdBy: userId},(err, msgs) => {
+			if (err) {
+				resolve('fail')
+			}
+			var listmsgs = [];
+			if(msgs.length>0){
+				msgs.forEach(function(u) {
+					listmsgs.push({ subject:u.subject, description: u.description, date: u.date, status: u.status, statusDate: u.statusDate, type: u.type, _id: u._id, files: u.files});
+				});
+			}
+
+			resolve(listmsgs)
+
+		})
+	});
+}
+
+function getUsers2 (req, res){
 	let group = req.params.groupName;
 	console.log(group);
 	Patient.find({group: group},(err, patients) => {
@@ -268,7 +381,7 @@ function setStateUser (req, res){
 	User.findByIdAndUpdate(userId, { blockedaccount: req.body.blockedaccount }, {new: true}, (err, userUpdated) => {
 		if (err) return res.status(500).send({message: `Error making the request: ${err}`})
 
-		res.status(200).send({ user: userUpdated})
+		res.status(200).send({ message: 'Blocked account: '+req.body.blockedaccount})
 	})
 
 }
