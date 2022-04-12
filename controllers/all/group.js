@@ -47,7 +47,7 @@ function getGroupsNames (req, res){
     var listGroups = [];
     if(groups.length>0){
       groups.forEach(function(group) {
-        listGroups.push({name:group.name, _id: group._id, order: group.order});
+        listGroups.push({name:group.name, _id: group._id, order: group.order, translations: group.translations});
       });
     }
 

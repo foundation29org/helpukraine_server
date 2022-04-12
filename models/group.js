@@ -20,7 +20,8 @@ const GroupSchema = Schema({
 		isNew: true,
 		changeData: true,
 		updatedBy: null
-	}}
+	}},
+	translations: {type: Object, default: []},
 })
 
 module.exports = conndbaccounts.model('Group',GroupSchema)
