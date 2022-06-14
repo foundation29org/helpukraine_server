@@ -13,6 +13,7 @@ const GroupSchema = Schema({
 	subscription: String,
 	email: String,
 	order: Number,
+	show: {type: Boolean, default: false},
 	defaultLang: {type: String, default: 'en'},
 	phenotype: {type: Object, default: []},
 	medications: {type: Object, default: []},
